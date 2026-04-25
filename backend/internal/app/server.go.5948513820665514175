@@ -1,0 +1,175 @@
+package app
+
+import (
+	"database/sql"
+	"encoding/json"
+	"errors"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/gorilla/handlers"
+	_ "modernc.org/sqlite"
+)
+
+type Server struct {
+	cfg Config
+	db  *sql.DB
+}
+
+func NewServer(cfg Config) *Server {
+	_ = os.MkdirAll(filepath.Dir(cfg.DBPath), 0o755)
+	db, err := sql.Open("sqlite", cfg.DBPath)
+	if err != nil {
+		panic(err)
+	}
+	if err := migrate(db); err != nil {
+		panic(err)
+	}
+	if err := seed(db); err != nil {
+		panic(err)
+	}
+	return &Server{cfg: cfg, db: db}
+}
+
+func (s *Server) Router() http.Handler {
+	r := chi.NewRouter()
+	r.Use(cors(s.cfg.FrontendOrigin))
+	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
+	})
+	r.Route("/api", func(r chi.Router) {
+		r.Post("/auth/register", s.handleRegister)
+		r.Post("/auth/login", s.handleLogin)
+		r.Get("/me", s.handleMe)
+		r.Get("/seed", s.handleSeed)
+	})
+	return r
+}
+
+func cors(origin string) func(http.Handler) http.Handler {
+	return handlers.CORS(
+		handlers.AllowedOrigins(strings.Split(origin, ",")),
+		handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Authorization", "Content-Type"}),
+	)
+}
+
+func writeJSON(w http.ResponseWriter, status int, v any) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	_ = json.NewEncoder(w).Encode(v)
+}
+
+type authRequest struct {
+	TenantSlug string `json:"tenantSlug"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+func (s *Server) handleRegister(w http.ResponseWriter, r *http.Request) {
+	var req authRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid_json"})
+		return
+	}
+	if req.Email == "" || req.Password == "" {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "missing_fields"})
+		return
+	}
+	tenantID, err := s.resolveTenantID(req.TenantSlug)
+	if err != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid_tenant"})
+		return
+	}
+	hash, err := hashPassword(req.Password)
+	if err != nil {
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "hash_failed"})
+		return
+	}
+	_, err = s.db.Exec(`insert into users(tenant_id,name,email,password_hash) values(?,?,?,?)`, tenantID, req.Name, req.Email, hash)
+	if err != nil {
+		writeJSON(w, http.StatusConflict, map[string]string{"error": "account_exists"})
+		return
+	}
+	writeJSON(w, http.StatusCreated, map[string]string{"message": "registered"})
+}
+
+func (s *Server) handleLogin(w http.ResponseWriter, r *http.Request) {
+	var req authRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid_json"})
+		return
+	}
+	var id int64
+	var name, hash string
+	tenantID, err := s.resolveTenantID(req.TenantSlug)
+	if err != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid_tenant"})
+		return
+	}
+	err = s.db.QueryRow(`select id,name,password_hash from users where tenant_id = ? and email = ?`, tenantID, req.Email).Scan(&id, &name, &hash)
+	if err != nil || comparePassword(hash, req.Password) != nil {
+		writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "invalid_credentials"})
+		return
+	}
+	token, _ := issueToken(s.cfg.JWTSecret, id, req.Email, name)
+	writeJSON(w, http.StatusOK, map[string]string{"token": token})
+}
+
+func (s *Server) handleMe(w http.ResponseWriter, r *http.Request) {
+	auth := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
+	claims, err := parseToken(s.cfg.JWTSecret, auth)
+	if err != nil {
+		writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"id": claims.UserID, "email": claims.Email, "name": claims.Name})
+}
+
+func (s *Server) handleSeed(w http.ResponseWriter, r *http.Request) {
+	writeJSON(w, http.StatusOK, seedSnapshot(s.db))
+}
+
+func (s *Server) resolveTenantID(slug string) (int64, error) {
+	if slug == "" {
+		slug = "acme-studio"
+	}
+	var id int64
+	if err := s.db.QueryRow(`select id from tenants where slug = ?`, slug).Scan(&id); err != nil {
+		return 0, err
+	}
+	return id, nil
+}
+
+type claims struct {
+	UserID int64  `json:"uid"`
+	Email  string `json:"email"`
+	Name   string `json:"name"`
+	jwt.RegisteredClaims
+}
+
+func issueToken(secret string, id int64, email, name string) (string, error) {
+	tok := jwt.NewWithClaims(jwt.SigningMethodHS256, claims{
+		UserID: id, Email: email, Name: name,
+	})
+	return tok.SignedString([]byte(secret))
+}
+
+func parseToken(secret, token string) (*claims, error) {
+	tok, err := jwt.ParseWithClaims(token, &claims{}, func(t *jwt.Token) (any, error) {
+		return []byte(secret), nil
+	})
+	if err != nil || !tok.Valid {
+		return nil, errors.New("invalid token")
+	}
+	cl, ok := tok.Claims.(*claims)
+	if !ok {
+		return nil, errors.New("invalid claims")
+	}
+	return cl, nil
+}

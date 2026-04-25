@@ -1,0 +1,76 @@
+open C:\Users\pingr\AppData\Local\go-build\84\841680f9b0151a186dec29706e105ec4099da8ec61f841d6d7703a462cee455e-d: Access is denied.
+fork/exec C:\Users\pingr\AppData\Local\Temp\go-build2030983537\b001\exe\admin.exe: An Application Control policy has blocked this file.
+ERROR: column "site_id" does not exist (SQLSTATE 42703)
+ERROR: column "status" of relation "tenants" does not exist (SQLSTATE 42703)
+ERROR: column "site_id" does not exist (SQLSTATE 42703)
+Program 'admin.exe' failed to run: An Application Control policy has blocked this fileAt line:1 char:1
++ & 'C:\Development\SiteCraft\storage\bin\admin.exe' migrate
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
+At line:1 char:1
++ & 'C:\Development\SiteCraft\storage\bin\admin.exe' migrate
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ResourceUnavailable: (:) [], ApplicationFailedException
+    + FullyQualifiedErrorId : NativeCommandFailed
+ 
+Program 'admin.exe' failed to run: An Application Control policy has blocked this fileAt line:1 char:1
++ & 'C:\Development\SiteCraft\storage\bin\admin.exe' init
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
+At line:1 char:1
++ & 'C:\Development\SiteCraft\storage\bin\admin.exe' init
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ResourceUnavailable: (:) [], ApplicationFailedException
+    + FullyQualifiedErrorId : NativeCommandFailed
+ 
+=== RUN   TestRunnerCommand
+    runner_test.go:41: ERROR: column "site_id" does not exist (SQLSTATE 42703)
+--- FAIL: TestRunnerCommand (0.15s)
+FAIL
+FAIL	sitecraft/backend/internal/app	2.219s
+FAIL
+=== RUN   TestRunnerCommand
+    runner_test.go:41: ERROR: column "site_id" does not exist (SQLSTATE 42703)
+--- FAIL: TestRunnerCommand (0.06s)
+FAIL
+FAIL	sitecraft/backend/internal/app	0.317s
+FAIL
+=== RUN   TestRunnerCommand
+    runner_test.go:41: ERROR: column "site_id" does not exist (SQLSTATE 42703)
+--- FAIL: TestRunnerCommand (0.06s)
+FAIL
+FAIL	sitecraft/backend/internal/app	0.316s
+FAIL
+reset-db completed successfully
+database create-db completed
+init completed successfully
+database create-db completed
+init completed successfully
+database create-db completed
+init completed successfully
+fork/exec C:\Users\pingr\AppData\Local\Temp\go-build1584028548\b001\exe\api.exe: An Application Control policy has blocked this file.
+database create-db completed
+init completed successfully
+fork/exec C:\Development\SiteCraft\storage\.gocache\3f\3f94276bd98611c5d9afce3c6e0e1822da03d016313072e48a28ec52716c5ddb-d\api.exe: An Application Control policy has blocked this file.
+database create-db completed
+init completed successfully
+fork/exec C:\Development\SiteCraft\storage\.gocache\3f\3f94276bd98611c5d9afce3c6e0e1822da03d016313072e48a28ec52716c5ddb-d\api.exe: An Application Control policy has blocked this file.
+database create-db completed
+init completed successfully
+database create-db completed
+init completed successfully
+fork/exec C:\Development\SiteCraft\storage\.gocache\3f\3f94276bd98611c5d9afce3c6e0e1822da03d016313072e48a28ec52716c5ddb-d\api.exe: An Application Control policy has blocked this file.
+database create-db completed
+init completed successfully
+fork/exec C:\Development\SiteCraft\storage\.gocache\3f\3f94276bd98611c5d9afce3c6e0e1822da03d016313072e48a28ec52716c5ddb-d\api.exe: An Application Control policy has blocked this file.
+database create-db completed
+init completed successfully
+fork/exec C:\Development\SiteCraft\storage\.gocache\3f\3f94276bd98611c5d9afce3c6e0e1822da03d016313072e48a28ec52716c5ddb-d\api.exe: An Application Control policy has blocked this file.
+database create-db completed
+init completed successfully
+fork/exec C:\Development\SiteCraft\storage\.gocache\3f\3f94276bd98611c5d9afce3c6e0e1822da03d016313072e48a28ec52716c5ddb-d\api.exe: An Application Control policy has blocked this file.
+database create-db completed
+init completed successfully
+fork/exec C:\Development\SiteCraft\storage\.gocache\3f\3f94276bd98611c5d9afce3c6e0e1822da03d016313072e48a28ec52716c5ddb-d\api.exe: An Application Control policy has blocked this file.
+database create-db completed
+init completed successfully
+2026/04/25 12:26:50 sitecraft api listening on :8080
+2026/04/25 12:26:50 sitecraft delivery listening on :8083

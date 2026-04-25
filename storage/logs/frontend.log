@@ -1,0 +1,134 @@
+
+> sitecraft-frontend@0.1.0 dev
+> vite
+
+Port 5137 is in use, trying another one...
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m264[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5138[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+
+> sitecraft-frontend@0.1.0 dev
+> vite
+
+Port 5137 is in use, trying another one...
+Port 5138 is in use, trying another one...
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m320[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5139[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+
+> sitecraft-frontend@0.1.0 dev
+> vite
+
+Port 5137 is in use, trying another one...
+Port 5138 is in use, trying another one...
+Port 5139 is in use, trying another one...
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m419[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5140[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m343[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5137[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+[31mfailed to load config from C:\Development\SiteCraft\frontend\vite.config.js[39m
+[31merror when starting dev server:
+Error: spawn EPERM
+    at ChildProcess.spawn (node:internal/child_process:421:11)
+    at Object.spawn (node:child_process:796:9)
+    at ensureServiceIsRunning (C:\Development\SiteCraft\frontend\node_modules\esbuild\lib\main.js:2268:29)
+    at build (C:\Development\SiteCraft\frontend\node_modules\esbuild\lib\main.js:2166:26)
+    at bundleConfigFile (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35819:23)
+    at bundleAndLoadConfigFile (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35806:24)
+    at loadConfigFromFile (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35775:179)
+    at resolveConfig (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35424:28)
+    at _createServer (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:25365:73)
+    at createServer$2 (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:25362:9)[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+[31mfailed to load config from C:\Development\SiteCraft\frontend\vite.config.js[39m
+[31merror when starting dev server:
+Error: spawn EPERM
+    at ChildProcess.spawn (node:internal/child_process:421:11)
+    at Object.spawn (node:child_process:796:9)
+    at ensureServiceIsRunning (C:\Development\SiteCraft\frontend\node_modules\esbuild\lib\main.js:2268:29)
+    at build (C:\Development\SiteCraft\frontend\node_modules\esbuild\lib\main.js:2166:26)
+    at bundleConfigFile (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35819:23)
+    at bundleAndLoadConfigFile (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35806:24)
+    at loadConfigFromFile (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35775:179)
+    at resolveConfig (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35424:28)
+    at _createServer (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:25365:73)
+    at createServer$2 (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:25362:9)[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+[31merror when starting dev server:
+Error: Port 5137 is already in use
+    at Server.onError$1 (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:14933:28)
+    at Server.emit (node:events:508:28)
+    at emitErrorNT (node:net:1984:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+C:\Development\SiteCraft\frontend\node_modules\rollup\dist\native.js:115
+		throw new Error(
+		      ^
+
+Error: Cannot find module @rollup/rollup-win32-x64-msvc. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (C:\Development\SiteCraft\frontend\node_modules\rollup\dist\native.js:115:9)
+    at Object.<anonymous> (C:\Development\SiteCraft\frontend\node_modules\rollup\dist\native.js:124:76)
+    at Module._compile (node:internal/modules/cjs/loader:1812:14)
+    at Object..js (node:internal/modules/cjs/loader:1943:10)
+    at Module.load (node:internal/modules/cjs/loader:1533:32)
+    at Module._load (node:internal/modules/cjs/loader:1335:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at loadCJSModuleWithModuleLoad (node:internal/modules/esm/translators:328:3)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:233:7)
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25) {
+  [cause]: Error: An Application Control policy has blocked this file.
+  \\?\C:\Development\SiteCraft\frontend\node_modules\@rollup\rollup-win32-x64-msvc\rollup.win32-x64-msvc.node
+      at Object..node (node:internal/modules/cjs/loader:1970:18)
+      at Module.load (node:internal/modules/cjs/loader:1533:32)
+      at Module._load (node:internal/modules/cjs/loader:1335:12)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+      at Module.require (node:internal/modules/cjs/loader:1556:12)
+      at require (node:internal/modules/helpers:152:16)
+      at requireWithFriendlyError (C:\Development\SiteCraft\frontend\node_modules\rollup\dist\native.js:97:10)
+      at Object.<anonymous> (C:\Development\SiteCraft\frontend\node_modules\rollup\dist\native.js:124:76)
+      at Module._compile (node:internal/modules/cjs/loader:1812:14)
+      at Object..js (node:internal/modules/cjs/loader:1943:10) {
+    code: 'ERR_DLOPEN_FAILED'
+  }
+}
+
+Node.js v24.14.1
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m475[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5137[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m

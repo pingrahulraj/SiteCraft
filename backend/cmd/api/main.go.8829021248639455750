@@ -1,0 +1,29 @@
+package main
+
+import (
+	"log"
+	"net/http"
+	"os"
+	"time"
+
+	"sitecraft/backend/internal/app"
+)
+
+func main() {
+	cfg := app.LoadConfig()
+	srv := app.NewServer(cfg)
+
+	server := &http.Server{
+		Addr:             ":" + cfg.APIPort,
+		Handler:          srv.Router(),
+		ReadHeaderTimeout: 5 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+	}
+
+	log.Printf("sitecraft api listening on %s", server.Addr)
+	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		log.Printf("server error: %v", err)
+		os.Exit(1)
+	}
+}

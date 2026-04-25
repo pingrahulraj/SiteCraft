@@ -1,0 +1,314 @@
+
+> sitecraft-frontend@0.1.0 dev
+> vite
+
+'vite' is not recognized as an internal or external command,
+operable program or batch file.
+
+> sitecraft-frontend@0.1.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m1744[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5137[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m1:27:06 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m1:27:06 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/LoginView.vue[22m
+[2m1:27:06 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SignupView.vue[22m
+[2m1:29:26 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/LoginView.vue[22m
+[2m1:29:26 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SignupView.vue[22m
+[2m1:29:27 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/DashboardView.vue[22m
+[2m1:29:27 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/LoginView.vue[22m
+[2m1:29:27 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/router.js[22m
+[2m1:29:27 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ new dependencies optimized: [33maxios[32m[39m
+[2m1:29:27 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ optimized dependencies changed. reloading[39m
+[2m1:29:27 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m1:31:26 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/LoginView.vue[22m
+[2m1:31:26 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+
+> sitecraft-frontend@0.1.0 dev
+> vite
+
+[31mfailed to load config from C:\Development\SiteCraft\frontend\vite.config.js[39m
+[31merror when starting dev server:
+Error: spawn EPERM
+    at ChildProcess.spawn (node:internal/child_process:421:11)
+    at Object.spawn (node:child_process:796:9)
+    at ensureServiceIsRunning (C:\Development\SiteCraft\frontend\node_modules\esbuild\lib\main.js:2268:29)
+    at build (C:\Development\SiteCraft\frontend\node_modules\esbuild\lib\main.js:2166:26)
+    at bundleConfigFile (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35819:23)
+    at bundleAndLoadConfigFile (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35806:24)
+    at loadConfigFromFile (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35775:179)
+    at resolveConfig (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35424:28)
+    at _createServer (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:25365:73)
+    at createServer$2 (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:25362:9)[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite
+
+[31mfailed to load config from C:\Development\SiteCraft\frontend\vite.config.js[39m
+[31merror when starting dev server:
+Error: spawn EPERM
+    at ChildProcess.spawn (node:internal/child_process:421:11)
+    at Object.spawn (node:child_process:796:9)
+    at ensureServiceIsRunning (C:\Development\SiteCraft\frontend\node_modules\esbuild\lib\main.js:2268:29)
+    at build (C:\Development\SiteCraft\frontend\node_modules\esbuild\lib\main.js:2166:26)
+    at bundleConfigFile (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35819:23)
+    at bundleAndLoadConfigFile (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35806:24)
+    at loadConfigFromFile (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35775:179)
+    at resolveConfig (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:35424:28)
+    at _createServer (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:25365:73)
+    at createServer$2 (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:25362:9)[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m368[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5137[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m1:40:12 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/DashboardView.vue[22m
+[2m1:40:12 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m1:50:29 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/DashboardView.vue[22m
+[2m1:50:29 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m1:52:36 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/DashboardView.vue[22m
+[2m1:52:45 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m1:54:55 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/DashboardView.vue[22m
+[2m1:57:41 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/router.js[22m
+[2m1:57:42 am[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to resolve import "./views/SiteDashboardView.vue" from "src/router.js". Does the file exist?
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Development/SiteCraft/frontend/src/router.js[39m:5:31
+[33m  3  |  import SignupView from './views/SignupView.vue'
+  4  |  import DashboardView from './views/DashboardView.vue'
+  5  |  import SiteDashboardView from './views/SiteDashboardView.vue'
+     |                                 ^
+  6  |  
+  7  |  export const router = createRouter({[39m
+[2m1:57:42 am[22m [31m[1m[vite][22m[39m [31mInternal server error: Failed to resolve import "./views/SiteDashboardView.vue" from "src/router.js". Does the file exist?[39m
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Development/SiteCraft/frontend/src/router.js[39m:5:31
+[33m  3  |  import SignupView from './views/SignupView.vue'
+  4  |  import DashboardView from './views/DashboardView.vue'
+  5  |  import SiteDashboardView from './views/SiteDashboardView.vue'
+     |                                 ^
+  6  |  
+  7  |  export const router = createRouter({[39m
+      at TransformPluginContext._formatLog (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:29003:43)
+      at TransformPluginContext.error (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:29000:14)
+      at normalizeUrl (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:27123:18)
+      at async file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:27181:32
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:27149:4)
+      at async EnvironmentPluginContainer.transform (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:28801:14)
+      at async loadAndTransform (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:22670:26)
+      at async viteTransformMiddleware (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:24546:20)
+[2m1:57:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/DashboardView.vue[22m
+[2m1:57:43 am[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to resolve import "./views/DashboardView.vue" from "src/router.js". Does the file exist?
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Development/SiteCraft/frontend/src/router.js[39m:4:27
+[33m  2  |  import LoginView from './views/LoginView.vue'
+  3  |  import SignupView from './views/SignupView.vue'
+  4  |  import DashboardView from './views/DashboardView.vue'
+     |                             ^
+  5  |  import SiteDashboardView from './views/SiteDashboardView.vue'
+  6  |  [39m
+[2m1:57:44 am[22m [31m[1m[vite][22m[39m [31mInternal server error: Failed to resolve import "./views/DashboardView.vue" from "src/router.js". Does the file exist?[39m
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Development/SiteCraft/frontend/src/router.js[39m:4:27
+[33m  2  |  import LoginView from './views/LoginView.vue'
+  3  |  import SignupView from './views/SignupView.vue'
+  4  |  import DashboardView from './views/DashboardView.vue'
+     |                             ^
+  5  |  import SiteDashboardView from './views/SiteDashboardView.vue'
+  6  |  [39m
+      at TransformPluginContext._formatLog (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:29003:43)
+      at TransformPluginContext.error (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:29000:14)
+      at normalizeUrl (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:27123:18)
+      at async file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:27181:32
+      at async Promise.all (index 3)
+      at async TransformPluginContext.transform (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:27149:4)
+      at async EnvironmentPluginContainer.transform (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:28801:14)
+      at async loadAndTransform (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:22670:26)
+      at async viteTransformMiddleware (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:24546:20)
+[2m1:58:06 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/views/DashboardView.vue[22m
+[2m1:58:10 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m2:00:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/router.js[22m
+[2m2:00:09 am[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to resolve import "./views/EditorView.vue" from "src/router.js". Does the file exist?
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Development/SiteCraft/frontend/src/router.js[39m:6:24
+[33m  4  |  import DashboardView from './views/DashboardView.vue'
+  5  |  import SiteDashboardView from './views/SiteDashboardView.vue'
+  6  |  import EditorView from './views/EditorView.vue'
+     |                          ^
+  7  |  
+  8  |  export const router = createRouter({[39m
+[2m2:00:09 am[22m [31m[1m[vite][22m[39m [31mInternal server error: Failed to resolve import "./views/EditorView.vue" from "src/router.js". Does the file exist?[39m
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Development/SiteCraft/frontend/src/router.js[39m:6:24
+[33m  4  |  import DashboardView from './views/DashboardView.vue'
+  5  |  import SiteDashboardView from './views/SiteDashboardView.vue'
+  6  |  import EditorView from './views/EditorView.vue'
+     |                          ^
+  7  |  
+  8  |  export const router = createRouter({[39m
+      at TransformPluginContext._formatLog (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:29003:43)
+      at TransformPluginContext.error (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:29000:14)
+      at normalizeUrl (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:27123:18)
+      at async file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:27181:32
+      at async Promise.all (index 5)
+      at async TransformPluginContext.transform (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:27149:4)
+      at async EnvironmentPluginContainer.transform (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:28801:14)
+      at async loadAndTransform (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:22670:26)
+      at async viteTransformMiddleware (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:24546:20)
+[2m2:00:12 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m2:00:12 am[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to resolve import "./views/EditorView.vue" from "src/router.js". Does the file exist?
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Development/SiteCraft/frontend/src/router.js[39m:6:24
+[33m  4  |  import DashboardView from './views/DashboardView.vue'
+  5  |  import SiteDashboardView from './views/SiteDashboardView.vue'
+  6  |  import EditorView from './views/EditorView.vue'
+     |                          ^
+  7  |  
+  8  |  export const router = createRouter({[39m
+[2m2:00:12 am[22m [31m[1m[vite][22m[39m [31mInternal server error: Failed to resolve import "./views/EditorView.vue" from "src/router.js". Does the file exist?[39m
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Development/SiteCraft/frontend/src/router.js[39m:6:24
+[33m  4  |  import DashboardView from './views/DashboardView.vue'
+  5  |  import SiteDashboardView from './views/SiteDashboardView.vue'
+  6  |  import EditorView from './views/EditorView.vue'
+     |                          ^
+  7  |  
+  8  |  export const router = createRouter({[39m
+      at TransformPluginContext._formatLog (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:29003:43)
+      at TransformPluginContext.error (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:29000:14)
+      at normalizeUrl (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:27123:18)
+      at async file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:27181:32
+      at async Promise.all (index 5)
+      at async TransformPluginContext.transform (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:27149:4)
+      at async EnvironmentPluginContainer.transform (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:28801:14)
+      at async loadAndTransform (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:22670:26)
+      at async viteTransformMiddleware (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:24546:20)
+[2m2:00:24 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/views/EditorView.vue[22m
+[2m2:00:46 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m2:01:01 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m3:54:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m3:54:30 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m3:58:15 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m3:58:23 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:01:55 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m4:02:01 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:12:18 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m4:12:24 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:14:59 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:17:30 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:18:15 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m4:18:20 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:22:39 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/DashboardView.vue[22m
+[2m4:22:43 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:26:33 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m7:07:53 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m7:08:18 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m7:08:23 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m7:39:41 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m7:40:12 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m7:40:12 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: Invalid end tag.[39m
+  Plugin: [35mvite:vue[39m
+  File: [36mC:/Development/SiteCraft/frontend/src/views/EditorView.vue[39m:264:31
+[33m  262 |    const styleTag = css ? `<style>${css}</style>` : ''
+  263 |    const scriptTag = js ? `<script>${js}</script>` : ''
+  264 |    const body = html.includes('</body>') ? html.replace('</body>', `${scriptTag}</body>`) : `${html}${scriptTag}`
+      |                                 ^
+  265 |    return body.includes('</head>') ? body.replace('</head>', `${styleTag}</head>`) : `<!doctype html><html><head>${sty...
+  266 |  })[39m
+      at createCompilerError (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-core\dist\compiler-core.cjs.js:1378:17)
+      at emitError (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-core\dist\compiler-core.cjs.js:3014:5)
+      at Object.onclosetag (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-core\dist\compiler-core.cjs.js:2391:9)
+      at Tokenizer.stateInClosingTagName (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-core\dist\compiler-core.cjs.js:799:16)
+      at Tokenizer.parse (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-core\dist\compiler-core.cjs.js:1157:16)
+      at Object.baseParse (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-core\dist\compiler-core.cjs.js:3053:13)
+      at Object.parse (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-dom\dist\compiler-dom.cjs.js:910:23)
+      at Object.parse$1 [as parse] (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-sfc\dist\compiler-sfc.cjs.js:1824:24)
+      at createDescriptor (file:///C:/Development/SiteCraft/frontend/node_modules/@vitejs/plugin-vue/dist/index.mjs:50:42)
+      at transformMain (file:///C:/Development/SiteCraft/frontend/node_modules/@vitejs/plugin-vue/dist/index.mjs:1303:33)
+[2m7:40:29 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m7:40:36 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/router.js[22m
+[2m7:40:36 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: Invalid end tag.[39m
+  Plugin: [35mvite:vue[39m
+  File: [36mC:/Development/SiteCraft/frontend/src/views/EditorView.vue[39m:264:31
+[33m  262 |    const styleTag = css ? `<style>${css}</style>` : ''
+  263 |    const scriptTag = js ? `<script>${js}</script>` : ''
+  264 |    const body = html.includes('</body>') ? html.replace('</body>', `${scriptTag}</body>`) : `${html}${scriptTag}`
+      |                                 ^
+  265 |    return body.includes('</head>') ? body.replace('</head>', `${styleTag}</head>`) : `<!doctype html><html><head>${sty...
+  266 |  })[39m
+      at createCompilerError (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-core\dist\compiler-core.cjs.js:1378:17)
+      at emitError (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-core\dist\compiler-core.cjs.js:3014:5)
+      at Object.onclosetag (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-core\dist\compiler-core.cjs.js:2391:9)
+      at Tokenizer.stateInClosingTagName (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-core\dist\compiler-core.cjs.js:799:16)
+      at Tokenizer.parse (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-core\dist\compiler-core.cjs.js:1157:16)
+      at Object.baseParse (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-core\dist\compiler-core.cjs.js:3053:13)
+      at Object.parse (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-dom\dist\compiler-dom.cjs.js:910:23)
+      at Object.parse$1 [as parse] (C:\Development\SiteCraft\frontend\node_modules\@vue\compiler-sfc\dist\compiler-sfc.cjs.js:1824:24)
+      at createDescriptor (file:///C:/Development/SiteCraft/frontend/node_modules/@vitejs/plugin-vue/dist/index.mjs:50:42)
+      at transformMain (file:///C:/Development/SiteCraft/frontend/node_modules/@vitejs/plugin-vue/dist/index.mjs:1303:33)
+[2m7:42:08 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m7:42:17 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m7:42:24 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m7:42:36 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m7:42:46 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m7:46:53 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m7:46:59 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m7:47:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m9:41:52 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+^C
+> sitecraft-frontend@0.1.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m368[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5137[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m9:52:19 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m11:53:10 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m11:53:14 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m11:55:54 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m11:55:56 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m11:58:24 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m11:58:29 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m11:58:32 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m11:58:39 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m12:01:10 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m12:02:45 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m12:04:32 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m12:05:50 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m12:05:53 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m12:06:51 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m12:10:46 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m12:11:11 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m12:16:07 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m12:16:23 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m12:44:54 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m12:56:00 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m12:57:27 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m12:57:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m1:04:49 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m1:08:34 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m1:08:59 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m1:21:51 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m1:22:11 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m1:23:16 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m1:24:52 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m1:53:28 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m1:54:07 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m1:54:23 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m1:54:28 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m12:00:11 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m12:00:24 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m12:00:30 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+^C
