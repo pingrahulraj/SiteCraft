@@ -317,6 +317,34 @@ create table if not exists newsletter_settings (
 	created_at timestamptz not null default now(),
 	updated_at timestamptz not null default now()
 );
+create table if not exists blog_settings (
+	id uuid primary key,
+	tenant_id uuid not null references tenants(id) on delete cascade,
+	site_id uuid not null unique references sites(id) on delete cascade,
+	blog_title text not null default '',
+	description text not null default '',
+	default_author_id uuid,
+	rss_enabled boolean not null default true,
+	comments_enabled boolean not null default true,
+	canonical_url text not null default '',
+	posts_per_page integer not null default 10,
+	social_sharing_enabled boolean not null default true,
+	settings_json jsonb not null default '{}'::jsonb,
+	created_at timestamptz not null default now(),
+	updated_at timestamptz not null default now()
+);
+create table if not exists blog_comments (
+	id uuid primary key,
+	tenant_id uuid not null references tenants(id) on delete cascade,
+	site_id uuid not null references sites(id) on delete cascade,
+	post_id uuid,
+	author_name text not null default '',
+	author_email text not null default '',
+	content text not null default '',
+	status text not null default 'pending',
+	created_at timestamptz not null default now(),
+	updated_at timestamptz not null default now()
+);
 
 create table if not exists blog_members (
 	id uuid primary key,
@@ -524,6 +552,28 @@ alter table if exists newsletter_settings add column if not exists send_posts_as
 alter table if exists newsletter_settings add column if not exists settings_json jsonb not null default '{}'::jsonb;
 alter table if exists newsletter_settings add column if not exists updated_at timestamptz not null default now();
 
+alter table if exists blog_settings add column if not exists tenant_id uuid;
+alter table if exists blog_settings add column if not exists site_id uuid;
+alter table if exists blog_settings add column if not exists blog_title text not null default '';
+alter table if exists blog_settings add column if not exists description text not null default '';
+alter table if exists blog_settings add column if not exists default_author_id uuid;
+alter table if exists blog_settings add column if not exists rss_enabled boolean not null default true;
+alter table if exists blog_settings add column if not exists comments_enabled boolean not null default true;
+alter table if exists blog_settings add column if not exists canonical_url text not null default '';
+alter table if exists blog_settings add column if not exists posts_per_page integer not null default 10;
+alter table if exists blog_settings add column if not exists social_sharing_enabled boolean not null default true;
+alter table if exists blog_settings add column if not exists settings_json jsonb not null default '{}'::jsonb;
+alter table if exists blog_settings add column if not exists updated_at timestamptz not null default now();
+
+alter table if exists blog_comments add column if not exists tenant_id uuid;
+alter table if exists blog_comments add column if not exists site_id uuid;
+alter table if exists blog_comments add column if not exists post_id uuid;
+alter table if exists blog_comments add column if not exists author_name text not null default '';
+alter table if exists blog_comments add column if not exists author_email text not null default '';
+alter table if exists blog_comments add column if not exists content text not null default '';
+alter table if exists blog_comments add column if not exists status text not null default 'pending';
+alter table if exists blog_comments add column if not exists updated_at timestamptz not null default now();
+
 alter table if exists blog_members add column if not exists tenant_id uuid;
 alter table if exists blog_members add column if not exists site_id uuid;
 alter table if exists blog_members add column if not exists member_type text not null default 'free';
@@ -578,6 +628,8 @@ create index if not exists idx_blog_posts_site_id on blog_posts(site_id);
 create index if not exists idx_blog_categories_site_id on blog_categories(site_id);
 create index if not exists idx_blog_tags_site_id on blog_tags(site_id);
 create index if not exists idx_blog_authors_site_id on blog_authors(site_id);
+create index if not exists idx_blog_settings_site_id on blog_settings(site_id);
+create index if not exists idx_blog_comments_site_id on blog_comments(site_id);
 create index if not exists idx_blog_members_site_id on blog_members(site_id);
 create index if not exists idx_blog_analytics_site_id on blog_analytics(site_id);
 create index if not exists idx_subscription_plans_site_id on subscription_plans(site_id);
@@ -758,6 +810,12 @@ func seedModules(ctx context.Context, tx *sql.Tx, tenantID, siteID string) error
 		{`insert into newsletter_settings(id,tenant_id,site_id,enabled,sender_name,sender_email,send_posts_as_email,settings_json,created_at,updated_at)
 			values($1,$2,$3,true,'SiteCraft','hello@sitecraft.app',true,'{}'::jsonb,now(),now())
 			on conflict (site_id) do nothing`, []any{ensureUUID("newsletter-settings"), tenantID, siteID}},
+		{`insert into blog_settings(id,tenant_id,site_id,blog_title,description,default_author_id,rss_enabled,comments_enabled,canonical_url,posts_per_page,social_sharing_enabled,settings_json,created_at,updated_at)
+			values($1,$2,$3,'SiteCraft Journal','News, publishing, and product updates.',$4,true,true,'',10,true,'{}'::jsonb,now(),now())
+			on conflict (site_id) do nothing`, []any{ensureUUID("blog-settings"), tenantID, siteID, ensureUUID("blog-author-ava")}},
+		{`insert into blog_comments(id,tenant_id,site_id,post_id,author_name,author_email,content,status,created_at,updated_at)
+			values($1,$2,$3,$4,'Mia Ward','mia@north.co','Excited to see this launch go live.','pending',now(),now())
+			on conflict do nothing`, []any{ensureUUID("blog-comment-launch"), tenantID, siteID, ensureUUID("post-launch")}},
 		{`insert into blog_members(id,tenant_id,site_id,name,email,member_type,status,joined_at,created_at,updated_at)
 			values($1,$2,$3,'Jordan Lee','jordan@brand.co','paid','active',now(),now(),now())
 			on conflict do nothing`, []any{ensureUUID("blog-member-jordan"), tenantID, siteID}},

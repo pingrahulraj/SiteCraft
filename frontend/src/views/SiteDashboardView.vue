@@ -5,11 +5,15 @@
         <span class="brand-mark brand-mark-sm"></span>
         <div>
           <strong>{{ site?.name || 'Site' }}</strong>
-          <span>Site dashboard</span>
+          <span>{{ siteStatusLabel }} · Command center</span>
         </div>
       </div>
       <div class="topbar-actions">
-        <button class="topbar-button" @click="editSite">Edit site</button>
+        <span class="status-badge" :data-state="siteStatusTone">{{ siteStatusLabel }}</span>
+        <a v-if="liveUrl" class="topbar-link" :href="liveUrl" target="_blank" rel="noreferrer">{{ liveUrl }}</a>
+        <button class="topbar-button topbar-button-ghost" @click="viewSite">View Site</button>
+        <button class="topbar-button" @click="editSite">Edit Site</button>
+        <button class="topbar-button topbar-button-primary" @click="publishSite" :disabled="publishing">{{ publishing ? 'Publishing...' : 'Publish' }}</button>
         <button class="topbar-button topbar-button-ghost" @click="backToWorkspace">Workspace</button>
         <button class="topbar-button topbar-button-ghost" @click="signOut">Sign out</button>
       </div>
@@ -25,7 +29,7 @@
               :key="item.key"
               class="sidebar-link"
               :class="{ active: activeSection === item.key }"
-              @click="activeSection = item.key"
+              @click="handleSectionClick(item.key)"
             >
               {{ item.label }}
             </button>
@@ -40,7 +44,325 @@
       </aside>
 
       <section class="content">
-        <template v-if="activeSection === 'ecommerce'">
+        <template v-if="activeSection === 'overview'">
+          <div class="command-center">
+            <section class="command-metrics">
+              <article v-for="metric in overviewMetrics" :key="metric.label" class="command-metric-card">
+                <span>{{ metric.label }}</span>
+                <strong>{{ metric.value }}</strong>
+                <small>{{ metric.note }}</small>
+              </article>
+            </section>
+
+            <section class="command-two-column">
+              <article class="surface-card command-card">
+                <div class="command-card-head">
+                  <div>
+                    <p class="eyebrow">Quick actions</p>
+                    <h2>Move the site forward</h2>
+                  </div>
+                </div>
+                <div class="quick-actions-grid">
+                  <button class="quick-action-button" @click="editSite">
+                    <strong>Edit Pages</strong>
+                    <span>Open the site editor</span>
+                  </button>
+                  <button class="quick-action-button" @click="jumpToProducts">
+                    <strong>Add Product</strong>
+                    <span>Create a catalog item</span>
+                  </button>
+                  <button class="quick-action-button" @click="jumpToBlogs">
+                    <strong>Write Blog</strong>
+                    <span>Draft a new post</span>
+                  </button>
+                  <button class="quick-action-button" @click="jumpToSubscriptions">
+                    <strong>Create Subscription</strong>
+                    <span>Launch a recurring plan</span>
+                  </button>
+                  <button class="quick-action-button" @click="editSite">
+                    <strong>Upload Asset</strong>
+                    <span>Use the editor file manager</span>
+                  </button>
+                </div>
+              </article>
+
+              <article class="surface-card command-card">
+                <div class="command-card-head">
+                  <div>
+                    <p class="eyebrow">Site health</p>
+                    <h2>Readiness at a glance</h2>
+                  </div>
+                </div>
+                <div class="health-list">
+                  <div v-for="item in siteHealthItems" :key="item.label" class="health-row">
+                    <div>
+                      <strong>{{ item.label }}</strong>
+                      <span>{{ item.note }}</span>
+                    </div>
+                    <span class="health-pill" :data-tone="item.tone">{{ item.value }}</span>
+                  </div>
+                </div>
+              </article>
+            </section>
+
+            <section class="command-resource-grid">
+              <article class="surface-card command-card">
+                <div class="command-card-head">
+                  <div>
+                    <p class="eyebrow">Pages</p>
+                    <h2>Page surface</h2>
+                  </div>
+                  <button class="link-button" @click="editSite">Edit Pages</button>
+                </div>
+                <div v-if="pageCards.length" class="resource-list">
+                  <button v-for="item in pageCards" :key="item.title" class="resource-item" @click="editSite">
+                    <strong>{{ item.title }}</strong>
+                    <span>{{ item.meta }}</span>
+                  </button>
+                </div>
+                <div v-else class="empty-module-state compact-empty-state">
+                  <strong>No pages yet.</strong>
+                  <button class="topbar-button" @click="editSite">Open Editor</button>
+                </div>
+              </article>
+
+              <article class="surface-card command-card">
+                <div class="command-card-head">
+                  <div>
+                    <p class="eyebrow">Products</p>
+                    <h2>Store catalog</h2>
+                  </div>
+                  <button class="link-button" @click="jumpToProducts">Add Product</button>
+                </div>
+                <div v-if="overviewProducts.length" class="resource-list">
+                  <button v-for="item in overviewProducts" :key="item.id" class="resource-item" @click="jumpToProducts(item)">
+                    <strong>{{ item.name }}</strong>
+                    <span>{{ currency(item.price) }} · {{ item.status }}</span>
+                  </button>
+                </div>
+                <div v-else class="empty-module-state compact-empty-state">
+                  <strong>No products yet.</strong>
+                  <button class="topbar-button" @click="jumpToProducts">Add Product</button>
+                </div>
+              </article>
+
+              <article class="surface-card command-card">
+                <div class="command-card-head">
+                  <div>
+                    <p class="eyebrow">Blog posts</p>
+                    <h2>Publishing queue</h2>
+                  </div>
+                  <button class="link-button" @click="jumpToBlogs">Write Blog</button>
+                </div>
+                <div v-if="overviewPosts.length" class="resource-list">
+                  <button v-for="item in overviewPosts" :key="item.id" class="resource-item" @click="jumpToBlogs(item)">
+                    <strong>{{ item.title }}</strong>
+                    <span>{{ item.status }} · {{ stamp(item.updatedAt) }}</span>
+                  </button>
+                </div>
+                <div v-else class="empty-module-state compact-empty-state">
+                  <strong>No posts yet.</strong>
+                  <button class="topbar-button" @click="jumpToBlogs">New Post</button>
+                </div>
+              </article>
+            </section>
+
+            <section class="surface-card command-activity">
+              <p class="eyebrow">Recent activity</p>
+              <strong>{{ recentActivity }}</strong>
+            </section>
+          </div>
+        </template>
+
+        <template v-else-if="activeSection === 'analytics'">
+          <div class="analytics-shell">
+            <section class="analytics-header surface-card compact-surface">
+              <div>
+                <p class="eyebrow">Analytics</p>
+                <h1>Analytics</h1>
+                <p class="lead">Understand traffic, engagement, and site performance.</p>
+              </div>
+              <div class="analytics-actions">
+                <div class="module-tabs analytics-range-tabs">
+                  <button
+                    v-for="range in analyticsRanges"
+                    :key="range.value"
+                    class="module-tab"
+                    :class="{ active: analyticsRange === range.value }"
+                    @click="analyticsRange = range.value"
+                  >
+                    {{ range.label }}
+                  </button>
+                </div>
+                <button class="topbar-button topbar-button-ghost" @click="refreshAnalytics" :disabled="analyticsRefreshing">
+                  {{ analyticsRefreshing ? 'Refreshing...' : 'Refresh' }}
+                </button>
+              </div>
+            </section>
+
+            <section class="analytics-kpis">
+              <article v-for="metric in analyticsKpis" :key="metric.label" class="surface-card compact-surface analytics-kpi-card">
+                <span>{{ metric.label }}</span>
+                <strong>{{ metric.value }}</strong>
+                <small :class="metric.trendTone">{{ metric.note }}</small>
+              </article>
+            </section>
+
+            <section class="analytics-main-grid">
+              <article class="surface-card analytics-traffic-card">
+                <div class="command-card-head analytics-card-head">
+                  <div>
+                    <p class="eyebrow">Traffic overview</p>
+                    <h2>Visitors and page views</h2>
+                  </div>
+                  <span class="table-meta">{{ analyticsSummaryLabel }}</span>
+                </div>
+                <div v-if="analyticsSeries.length" class="traffic-chart">
+                  <div class="traffic-chart-bars">
+                    <div v-for="point in analyticsSeries" :key="point.label" class="traffic-bar-group">
+                      <div class="traffic-bar-stack">
+                        <span
+                          class="traffic-bar traffic-bar-visitors"
+                          :style="{ height: `${Math.max(12, (point.visitors / analyticsMaxValue) * 100)}%` }"
+                          :title="`${point.label}: ${point.visitors} visitors`"
+                        ></span>
+                        <span
+                          class="traffic-bar traffic-bar-pageviews"
+                          :style="{ height: `${Math.max(12, (point.pageViews / analyticsMaxValue) * 100)}%` }"
+                          :title="`${point.label}: ${point.pageViews} page views`"
+                        ></span>
+                      </div>
+                      <strong>{{ point.label }}</strong>
+                      <span>{{ point.visitors }}/{{ point.pageViews }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div v-else class="empty-module-state">
+                  <strong>No analytics data yet.</strong>
+                  <span>Traffic data will appear here once visits are recorded.</span>
+                </div>
+              </article>
+
+              <div class="analytics-side-stack">
+                <article class="surface-card compact-surface">
+                  <div class="command-card-head analytics-card-head">
+                    <div>
+                      <p class="eyebrow">Top sources</p>
+                      <h2>Acquisition mix</h2>
+                    </div>
+                  </div>
+                  <div v-if="analyticsSources.length" class="analytics-list">
+                    <div v-for="source in analyticsSources" :key="source.label" class="analytics-list-row">
+                      <div>
+                        <strong>{{ source.label }}</strong>
+                        <span>{{ source.visitors }} visitors</span>
+                      </div>
+                      <span class="health-pill" data-tone="green">{{ source.share }}</span>
+                    </div>
+                  </div>
+                  <div v-else class="empty-module-state compact-empty-state">
+                    <strong>No sources yet.</strong>
+                  </div>
+                </article>
+
+                <article class="surface-card compact-surface">
+                  <div class="command-card-head analytics-card-head">
+                    <div>
+                      <p class="eyebrow">Devices</p>
+                      <h2>Device breakdown</h2>
+                    </div>
+                  </div>
+                  <div v-if="analyticsDevices.length" class="analytics-list">
+                    <div v-for="device in analyticsDevices" :key="device.label" class="analytics-list-row">
+                      <div>
+                        <strong>{{ device.label }}</strong>
+                        <span>{{ device.sessions }} sessions</span>
+                      </div>
+                      <span class="health-pill" data-tone="yellow">{{ device.share }}</span>
+                    </div>
+                  </div>
+                  <div v-else class="empty-module-state compact-empty-state">
+                    <strong>No device data yet.</strong>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="analytics-second-grid">
+              <article class="surface-card workspace-table">
+                <div class="table-head">
+                  <div>
+                    <strong>Top pages</strong>
+                    <div class="table-meta">See which pages are pulling the strongest engagement.</div>
+                  </div>
+                </div>
+                <table v-if="analyticsTopPages.length" class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Page</th>
+                      <th>Views</th>
+                      <th>Visitors</th>
+                      <th>Avg. Time</th>
+                      <th>Conversion</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="page in analyticsTopPages" :key="page.path">
+                      <td>
+                        <strong>{{ page.title }}</strong>
+                        <div class="table-subtle">{{ page.path }}</div>
+                      </td>
+                      <td>{{ page.views }}</td>
+                      <td>{{ page.visitors }}</td>
+                      <td>{{ page.avgTime }}</td>
+                      <td>{{ page.conversion }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div v-else class="empty-module-state">
+                  <strong>No page performance data yet.</strong>
+                </div>
+              </article>
+
+              <article class="surface-card compact-surface">
+                <div class="command-card-head analytics-card-head">
+                  <div>
+                    <p class="eyebrow">Recent events</p>
+                    <h2>What visitors did</h2>
+                  </div>
+                </div>
+                <div v-if="analyticsEvents.length" class="analytics-list">
+                  <div v-for="event in analyticsEvents" :key="event.id" class="analytics-event-row">
+                    <div>
+                      <strong>{{ event.title }}</strong>
+                      <span>{{ event.note }}</span>
+                    </div>
+                    <small>{{ event.when }}</small>
+                  </div>
+                </div>
+                <div v-else class="empty-module-state compact-empty-state">
+                  <strong>No recent events yet.</strong>
+                </div>
+              </article>
+            </section>
+
+            <section class="analytics-insights-grid">
+              <article v-for="insight in analyticsInsights" :key="insight.label" class="surface-card compact-surface analytics-insight-card">
+                <div class="command-card-head analytics-card-head">
+                  <div>
+                    <p class="eyebrow">SEO / Health</p>
+                    <h2>{{ insight.label }}</h2>
+                  </div>
+                  <span class="health-pill" :data-tone="insight.tone">{{ insight.status }}</span>
+                </div>
+                <strong class="analytics-insight-value">{{ insight.value }}</strong>
+                <p class="lead">{{ insight.note }}</p>
+              </article>
+            </section>
+          </div>
+        </template>
+
+        <template v-else-if="activeSection === 'ecommerce'">
           <div class="module-shell">
             <div class="module-hero">
               <div>
@@ -608,9 +930,12 @@ const activeSection = ref('overview')
 const ecommerceTab = ref('Products')
 const subscriptionTab = ref('Plans')
 const blogsTab = ref('Posts')
+const analyticsRange = ref('30d')
+const analyticsRefreshing = ref(false)
 const showProductModal = ref(false)
 const showPlanModal = ref(false)
 const showPostModal = ref(false)
+const publishing = ref(false)
 const ecommerce = useEcommerceStore()
 const blogs = useBlogsStore()
 const subscriptionsStore = useSubscriptionsStore()
@@ -637,6 +962,11 @@ const sections = [
 const ecommerceTabs = ['Products', 'Orders', 'Customers', 'Coupons', 'Shipping', 'Taxes', 'Store Settings']
 const subscriptionTabs = ['Plans', 'Subscribers', 'Subscriptions', 'Invoices', 'Failed Payments', 'Settings']
 const blogTabs = ['Posts', 'Categories', 'Tags', 'Authors', 'Newsletter', 'Members', 'Analytics', 'Settings']
+const analyticsRanges = [
+  { label: '7 days', value: '7d' },
+  { label: '30 days', value: '30d' },
+  { label: '90 days', value: '90d' }
+]
 
 const storeSettingCards = computed(() => [
   { eyebrow: 'Currency', title: ecommerce.storeSettings?.currency || 'USD', lead: 'Storefront currency and display format.' },
@@ -662,6 +992,149 @@ const blogSettingCards = computed(() => [
   { eyebrow: 'RSS', title: 'Enabled', lead: 'RSS feed is ready for readers and syndication.' },
   { eyebrow: 'Canonical & sharing', title: 'Coming soon', lead: 'Social sharing and canonical preferences placeholder.' }
 ])
+const analyticsDataset = {
+  '7d': {
+    summary: 'Last 7 days',
+    kpis: {
+      visitors: '2,460',
+      pageViews: '6,920',
+      conversion: '3.8%',
+      avgSession: '2m 46s',
+      bounceRate: '38%'
+    },
+    series: [
+      { label: 'Mon', visitors: 280, pageViews: 760 },
+      { label: 'Tue', visitors: 320, pageViews: 880 },
+      { label: 'Wed', visitors: 340, pageViews: 940 },
+      { label: 'Thu', visitors: 360, pageViews: 990 },
+      { label: 'Fri', visitors: 410, pageViews: 1120 },
+      { label: 'Sat', visitors: 380, pageViews: 1040 },
+      { label: 'Sun', visitors: 370, pageViews: 1190 }
+    ],
+    sources: [
+      { label: 'Organic Search', visitors: 940, share: '38%' },
+      { label: 'Direct', visitors: 640, share: '26%' },
+      { label: 'Social', visitors: 430, share: '17%' },
+      { label: 'Referral', visitors: 280, share: '11%' },
+      { label: 'Email', visitors: 170, share: '7%' }
+    ],
+    devices: [
+      { label: 'Mobile', sessions: 1320, share: '54%' },
+      { label: 'Desktop', sessions: 910, share: '37%' },
+      { label: 'Tablet', sessions: 230, share: '9%' }
+    ],
+    topPages: [
+      { title: 'Home', path: '/', views: '2,140', visitors: '1,320', avgTime: '1m 54s', conversion: '4.1%' },
+      { title: 'Pricing', path: '/pricing', views: '1,180', visitors: '780', avgTime: '2m 08s', conversion: '6.7%' },
+      { title: 'Demo Request', path: '/demo', views: '860', visitors: '530', avgTime: '2m 42s', conversion: '8.2%' },
+      { title: 'Blog / Launch Notes', path: '/blog/launch-notes', views: '740', visitors: '510', avgTime: '3m 16s', conversion: '1.4%' }
+    ],
+    events: [
+      { id: 'evt-1', title: 'Product page clicked', note: 'Visitor opened /pricing from homepage CTA', when: '5 min ago' },
+      { id: 'evt-2', title: 'Blog post read', note: 'Launch Notes article reached 75% scroll depth', when: '18 min ago' },
+      { id: 'evt-3', title: 'Site viewed', note: 'Organic visitor landed on /demo from Google', when: '32 min ago' },
+      { id: 'evt-4', title: 'Form opened', note: 'Demo request modal triggered from pricing page', when: '1 hr ago' }
+    ],
+    insights: [
+      { label: 'Missing meta descriptions', value: '3 pages', status: 'Needs work', tone: 'yellow', note: 'Add descriptions to pricing, features, and one blog post.' },
+      { label: 'Slow pages', value: '1 route', status: 'Watch', tone: 'yellow', note: 'The demo page is slower than the rest of the site on mobile.' },
+      { label: 'Unpublished changes', value: site.value?.status === 'live' ? '1 pending' : 'Draft only', status: site.value?.status === 'live' ? 'Review' : 'Draft', tone: 'yellow', note: 'Publish to keep analytics aligned with the latest content changes.' },
+      { label: 'Broken links', value: '0 detected', status: 'Healthy', tone: 'green', note: 'No obvious link issues in the current placeholder audit.' }
+    ]
+  },
+  '30d': {
+    summary: 'Last 30 days',
+    kpis: {
+      visitors: '18,420',
+      pageViews: '52,880',
+      conversion: '3.4%',
+      avgSession: '3m 08s',
+      bounceRate: '41%'
+    },
+    series: [
+      { label: 'W1', visitors: 3120, pageViews: 8740 },
+      { label: 'W2', visitors: 3560, pageViews: 9840 },
+      { label: 'W3', visitors: 4010, pageViews: 11320 },
+      { label: 'W4', visitors: 4480, pageViews: 12980 },
+      { label: 'W5', visitors: 3250, pageViews: 10000 }
+    ],
+    sources: [
+      { label: 'Organic Search', visitors: 7240, share: '39%' },
+      { label: 'Direct', visitors: 4480, share: '24%' },
+      { label: 'Social', visitors: 2940, share: '16%' },
+      { label: 'Referral', visitors: 2270, share: '12%' },
+      { label: 'Email', visitors: 1490, share: '8%' }
+    ],
+    devices: [
+      { label: 'Mobile', sessions: 10120, share: '55%' },
+      { label: 'Desktop', sessions: 6510, share: '35%' },
+      { label: 'Tablet', sessions: 1790, share: '10%' }
+    ],
+    topPages: [
+      { title: 'Home', path: '/', views: '15,260', visitors: '8,910', avgTime: '2m 04s', conversion: '3.9%' },
+      { title: 'Pricing', path: '/pricing', views: '8,430', visitors: '5,180', avgTime: '2m 21s', conversion: '6.5%' },
+      { title: 'Features', path: '/features', views: '6,180', visitors: '4,240', avgTime: '2m 42s', conversion: '2.8%' },
+      { title: 'Blog / Launch Notes', path: '/blog/launch-notes', views: '4,980', visitors: '3,420', avgTime: '3m 28s', conversion: '1.7%' }
+    ],
+    events: [
+      { id: 'evt-5', title: 'Traffic spike detected', note: 'Organic traffic lifted after homepage metadata refresh', when: 'Today' },
+      { id: 'evt-6', title: 'High-intent session', note: 'Visitor viewed pricing, demo, and contact pages in one session', when: 'Today' },
+      { id: 'evt-7', title: 'Top page updated', note: 'Pricing page overtook features page for weekly conversions', when: 'Yesterday' },
+      { id: 'evt-8', title: 'Content assist', note: 'Launch Notes remains the top-performing post this month', when: '2 days ago' }
+    ],
+    insights: [
+      { label: 'Missing meta descriptions', value: '4 pages', status: 'Needs work', tone: 'yellow', note: 'Homepage is healthy, but pricing and three secondary routes still need copy.' },
+      { label: 'Slow pages', value: '2 routes', status: 'Watch', tone: 'yellow', note: 'Features and demo pages have room to improve on mobile.' },
+      { label: 'Unpublished changes', value: site.value?.status === 'live' ? '2 pending' : 'Draft only', status: site.value?.status === 'live' ? 'Review' : 'Draft', tone: 'yellow', note: 'There are likely editor updates worth publishing after review.' },
+      { label: 'Broken links', value: '1 placeholder', status: 'Investigate', tone: 'red', note: 'One footer resource link needs verification before the next publish.' }
+    ]
+  },
+  '90d': {
+    summary: 'Last 90 days',
+    kpis: {
+      visitors: '54,960',
+      pageViews: '161,240',
+      conversion: '3.1%',
+      avgSession: '3m 18s',
+      bounceRate: '43%'
+    },
+    series: [
+      { label: 'Jan', visitors: 15420, pageViews: 44280 },
+      { label: 'Feb', visitors: 17360, pageViews: 50820 },
+      { label: 'Mar', visitors: 22180, pageViews: 66140 }
+    ],
+    sources: [
+      { label: 'Organic Search', visitors: 22430, share: '41%' },
+      { label: 'Direct', visitors: 12410, share: '23%' },
+      { label: 'Social', visitors: 8760, share: '16%' },
+      { label: 'Referral', visitors: 6210, share: '11%' },
+      { label: 'Email', visitors: 4020, share: '7%' }
+    ],
+    devices: [
+      { label: 'Mobile', sessions: 30890, share: '56%' },
+      { label: 'Desktop', sessions: 18810, share: '34%' },
+      { label: 'Tablet', sessions: 5260, share: '10%' }
+    ],
+    topPages: [
+      { title: 'Home', path: '/', views: '46,220', visitors: '27,130', avgTime: '2m 12s', conversion: '3.7%' },
+      { title: 'Pricing', path: '/pricing', views: '24,880', visitors: '14,950', avgTime: '2m 33s', conversion: '6.1%' },
+      { title: 'Features', path: '/features', views: '18,740', visitors: '11,860', avgTime: '2m 48s', conversion: '2.9%' },
+      { title: 'Blog / Launch Notes', path: '/blog/launch-notes', views: '13,440', visitors: '9,120', avgTime: '3m 34s', conversion: '1.9%' }
+    ],
+    events: [
+      { id: 'evt-9', title: 'Quarterly growth', note: 'Traffic trend is up quarter over quarter with stronger search acquisition', when: 'This quarter' },
+      { id: 'evt-10', title: 'Top landing page', note: 'Homepage remains the strongest landing page for first-touch visits', when: 'This quarter' },
+      { id: 'evt-11', title: 'Content assist', note: 'Blog traffic contributes to brand discovery but not enough conversion yet', when: 'This quarter' },
+      { id: 'evt-12', title: 'Action needed', note: 'Pricing and demo pages should be the next optimization focus', when: 'This quarter' }
+    ],
+    insights: [
+      { label: 'Missing meta descriptions', value: '6 pages', status: 'Needs work', tone: 'yellow', note: 'Meta coverage improved, but there are still several routes missing descriptions.' },
+      { label: 'Slow pages', value: '2 routes', status: 'Watch', tone: 'yellow', note: 'Performance is stable overall, with two routes still lagging on mobile.' },
+      { label: 'Unpublished changes', value: site.value?.status === 'live' ? '3 pending' : 'Draft only', status: site.value?.status === 'live' ? 'Review' : 'Draft', tone: 'yellow', note: 'Publishing the latest improvements will keep live analytics representative.' },
+      { label: 'Broken links', value: '1 placeholder', status: 'Investigate', tone: 'red', note: 'One broken link placeholder remains on the quarterly audit list.' }
+    ]
+  }
+}
 
 const sectionContent = {
   overview: {
@@ -727,6 +1200,57 @@ const sectionCards = computed(() => {
   }
   return map[activeSection.value] || map.overview
 })
+const liveUrl = computed(() => site.value?.previewUrl || site.value?.publicUrl || (site.value?.slug ? `http://localhost:8083/sites/${site.value.slug}` : ''))
+const siteStatusLabel = computed(() => {
+  const status = String(site.value?.status || 'draft').toLowerCase()
+  return status === 'live' ? 'Live' : 'Draft'
+})
+const siteStatusTone = computed(() => (siteStatusLabel.value === 'Live' ? 'live' : 'saved'))
+const overviewProducts = computed(() => ecommerce.products.slice(0, 3))
+const overviewPosts = computed(() => blogs.posts.slice(0, 3))
+const pageCards = computed(() => [
+  { title: 'Home / index.html', meta: site.value?.status === 'live' ? 'Published route' : 'Primary draft page' },
+  { title: 'Styles / styles.css', meta: 'Brand and layout styling' },
+  { title: 'Scripts / app.js', meta: 'Interactive site behaviors' }
+])
+const overviewMetrics = computed(() => [
+  { label: 'Visitors', value: '18.4k', note: 'Last 30 days' },
+  { label: 'Orders / Revenue', value: `${ecommerce.orders.length} / ${currency(ecommerce.orders.reduce((sum, order) => sum + Number(order.amount || 0), 0))}`, note: 'Store performance' },
+  { label: 'Subscribers', value: `${subscriptionsStore.subscribers.length || blogs.members.length}`, note: 'Audience growth' },
+  { label: 'Conversion', value: '3.4%', note: 'Session to action' },
+  { label: 'Last Published', value: site.value?.publishedAt ? stamp(site.value.publishedAt) : 'Not yet', note: siteStatusLabel.value === 'Live' ? 'Production live' : 'Draft only' }
+])
+const siteHealthItems = computed(() => [
+  { label: 'Domain status', value: liveUrl.value ? 'Connected' : 'Missing', note: liveUrl.value || 'Publish to generate the live route.', tone: liveUrl.value ? 'green' : 'yellow' },
+  { label: 'SEO status', value: overviewPosts.value.length ? 'Ready' : 'Needs content', note: overviewPosts.value.length ? 'Blog and metadata are present.' : 'Add content for search visibility.', tone: overviewPosts.value.length ? 'green' : 'yellow' },
+  { label: 'Publish status', value: siteStatusLabel.value, note: site.value?.publishedAt ? `Last publish ${stamp(site.value.publishedAt)}` : 'No production publish yet.', tone: siteStatusLabel.value === 'Live' ? 'green' : 'yellow' },
+  { label: 'Performance status', value: 'Stable', note: 'Static delivery is active for published HTML.', tone: 'green' }
+])
+const recentActivity = computed(() => {
+  if (site.value?.publishedAt) return `Published ${site.value.name} on ${stamp(site.value.publishedAt)} and ready at ${liveUrl.value}.`
+  if (overviewPosts.value.length) return `Latest content update: ${overviewPosts.value[0].title} is ${overviewPosts.value[0].status}.`
+  if (overviewProducts.value.length) return `Catalog activity: ${overviewProducts.value[0].name} is priced at ${currency(overviewProducts.value[0].price)}.`
+  return 'Open the editor, publish the site, or create your first product, post, or subscription plan.'
+})
+const activeAnalytics = computed(() => analyticsDataset[analyticsRange.value] || analyticsDataset['30d'])
+const analyticsSummaryLabel = computed(() => activeAnalytics.value.summary)
+const analyticsSeries = computed(() => activeAnalytics.value.series || [])
+const analyticsSources = computed(() => activeAnalytics.value.sources || [])
+const analyticsDevices = computed(() => activeAnalytics.value.devices || [])
+const analyticsTopPages = computed(() => activeAnalytics.value.topPages || [])
+const analyticsEvents = computed(() => activeAnalytics.value.events || [])
+const analyticsInsights = computed(() => activeAnalytics.value.insights || [])
+const analyticsMaxValue = computed(() => Math.max(1, ...analyticsSeries.value.flatMap((point) => [point.visitors, point.pageViews])))
+const analyticsKpis = computed(() => {
+  const kpis = activeAnalytics.value.kpis || {}
+  return [
+    { label: 'Visitors', value: kpis.visitors || '0', note: analyticsRange.value === '7d' ? '+8.4% vs prev.' : '+12.6% vs prev.', trendTone: 'analytics-positive' },
+    { label: 'Page Views', value: kpis.pageViews || '0', note: 'Content demand is rising', trendTone: 'analytics-positive' },
+    { label: 'Conversion', value: kpis.conversion || '0%', note: 'Pricing page leads', trendTone: 'analytics-positive' },
+    { label: 'Avg. Session', value: kpis.avgSession || '0m 00s', note: 'Engagement remains healthy', trendTone: 'analytics-neutral' },
+    { label: 'Bounce Rate', value: kpis.bounceRate || '0%', note: 'Watch landing pages', trendTone: 'analytics-warning' }
+  ]
+})
 
 const ecommerceProducts = computed(() => ecommerce.products.map((product, index) => ({
   ...product,
@@ -768,6 +1292,13 @@ const loadSite = async () => {
 }
 
 const loadSectionData = async (section) => {
+  if (section === 'overview') {
+    await Promise.allSettled([
+      ecommerce.load(route.params.id),
+      blogs.load(route.params.id),
+      subscriptionsStore.load(route.params.id)
+    ])
+  }
   if (section === 'ecommerce') {
     await ecommerce.load(route.params.id)
   }
@@ -777,6 +1308,11 @@ const loadSectionData = async (section) => {
   if (section === 'subscriptions') {
     await subscriptionsStore.load(route.params.id)
   }
+}
+const refreshAnalytics = async () => {
+  analyticsRefreshing.value = true
+  await new Promise((resolve) => setTimeout(resolve, 650))
+  analyticsRefreshing.value = false
 }
 
 const openProductModal = (product = null) => {
@@ -841,8 +1377,69 @@ const togglePost = async (post) => {
 const backToWorkspace = async () => {
   await router.push('/dashboard')
 }
+const handleSectionClick = async (key) => {
+  if (key === 'blogs') {
+    localStorage.setItem('sitecraft_active_site_id', String(route.params.id))
+    localStorage.setItem('sitecraft_active_site_name', site.value?.name || 'SiteCraft')
+    if (liveUrl.value) localStorage.setItem('sitecraft_active_site_url', liveUrl.value)
+    await router.push({ path: '/blogs/posts', query: { siteId: route.params.id } })
+    return
+  }
+  activeSection.value = key
+}
+const viewSite = () => {
+  if (liveUrl.value) {
+    window.open(liveUrl.value, '_blank', 'noopener')
+  }
+}
 const editSite = async () => {
   await router.push(`/site/${route.params.id}/editor`)
+}
+const publishSite = async () => {
+  publishing.value = true
+  try {
+    const { data } = await api.post(`/sites/${route.params.id}/publish`)
+    const publicUrl = data?.public_url || data?.item?.public_url || liveUrl.value
+    site.value = {
+      ...(site.value || {}),
+      status: 'live',
+      publishedAt: data?.published_at || new Date().toISOString(),
+      publicUrl
+    }
+    if (publicUrl) {
+      window.open(publicUrl, '_blank', 'noopener')
+    }
+  } finally {
+    publishing.value = false
+  }
+}
+const jumpToProducts = (product = null) => {
+  activeSection.value = 'ecommerce'
+  ecommerceTab.value = 'Products'
+  if (product) {
+    openProductModal(product)
+  } else {
+    openProductModal()
+  }
+}
+const jumpToBlogs = (post = null) => {
+  localStorage.setItem('sitecraft_active_site_id', String(route.params.id))
+  localStorage.setItem('sitecraft_active_site_name', site.value?.name || 'SiteCraft')
+  if (liveUrl.value) localStorage.setItem('sitecraft_active_site_url', liveUrl.value)
+  if (post?.id) {
+    router.push({ path: `/blogs/posts/${post.id}/edit`, query: { siteId: route.params.id } })
+    return
+  }
+  router.push({ path: '/blogs/posts/new', query: { siteId: route.params.id } })
+}
+const jumpToSubscriptions = (plan = null) => {
+  activeSection.value = 'subscriptions'
+  subscriptionTab.value = 'Plans'
+  if (plan) {
+    openPlanModal(plan)
+  } else {
+    openPlanModal()
+  }
 }
 const signOut = async () => {
   localStorage.removeItem('sitecraft_token')

@@ -115,6 +115,8 @@ func (s *Server) Router() http.Handler {
 		r.Delete("/sites/{id}/posts/{postId}", s.handleDeletePost)
 		r.Post("/sites/{id}/posts/{postId}/publish", s.handlePublishPost)
 		r.Post("/sites/{id}/posts/{postId}/unpublish", s.handleUnpublishPost)
+		r.Post("/sites/{id}/posts/{postId}/duplicate", s.handleDuplicatePost)
+		r.Post("/sites/{id}/posts/{postId}/trash", s.handleTrashPost)
 		r.Get("/sites/{id}/blog-categories", s.handleListBlogCategories)
 		r.Post("/sites/{id}/blog-categories", s.handleCreateBlogCategory)
 		r.Put("/sites/{id}/blog-categories/{categoryId}", s.handleUpdateBlogCategory)
@@ -129,10 +131,15 @@ func (s *Server) Router() http.Handler {
 		r.Delete("/sites/{id}/blog-authors/{authorId}", s.handleDeleteBlogAuthor)
 		r.Get("/sites/{id}/newsletter-settings", s.handleGetNewsletterSettings)
 		r.Put("/sites/{id}/newsletter-settings", s.handleUpsertNewsletterSettings)
+		r.Get("/sites/{id}/blog-settings", s.handleGetBlogSettings)
+		r.Put("/sites/{id}/blog-settings", s.handleUpsertBlogSettings)
 		r.Get("/sites/{id}/blog-members", s.handleListBlogMembers)
 		r.Post("/sites/{id}/blog-members", s.handleCreateBlogMember)
 		r.Put("/sites/{id}/blog-members/{memberId}", s.handleUpdateBlogMember)
 		r.Delete("/sites/{id}/blog-members/{memberId}", s.handleDeleteBlogMember)
+		r.Get("/sites/{id}/blog-comments", s.handleListBlogComments)
+		r.Post("/sites/{id}/blog-comments/{commentId}/approve", s.handleApproveBlogComment)
+		r.Post("/sites/{id}/blog-comments/{commentId}/trash", s.handleTrashBlogComment)
 		r.Get("/sites/{id}/blog-analytics", s.handleGetBlogAnalytics)
 		r.Get("/sites/{id}/subscription-plans", s.handleListSubscriptionPlans)
 		r.Post("/sites/{id}/subscription-plans", s.handleCreateSubscriptionPlan)
@@ -247,6 +254,50 @@ type postPayload struct {
 	Status        string `json:"status"`
 }
 
+type blogCategoryPayload struct {
+	Name        string `json:"name"`
+	Slug        string `json:"slug"`
+	Description string `json:"description"`
+}
+
+type blogTagPayload struct {
+	Name       string `json:"name"`
+	Slug       string `json:"slug"`
+	Visibility string `json:"visibility"`
+}
+
+type blogAuthorPayload struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+	Role  string `json:"role"`
+	Bio   string `json:"bio"`
+}
+
+type blogMemberPayload struct {
+	Name       string `json:"name"`
+	Email      string `json:"email"`
+	MemberType string `json:"memberType"`
+	Status     string `json:"status"`
+}
+
+type newsletterPayload struct {
+	Enabled          bool   `json:"enabled"`
+	SenderName       string `json:"senderName"`
+	SenderEmail      string `json:"senderEmail"`
+	SendPostsAsEmail bool   `json:"sendPostsAsEmail"`
+}
+
+type blogSettingsPayload struct {
+	BlogTitle            string `json:"blogTitle"`
+	Description          string `json:"description"`
+	DefaultAuthorID      string `json:"defaultAuthorId"`
+	RSSEnabled           bool   `json:"rssEnabled"`
+	CommentsEnabled      bool   `json:"commentsEnabled"`
+	CanonicalURL         string `json:"canonicalUrl"`
+	PostsPerPage         int    `json:"postsPerPage"`
+	SocialSharingEnabled bool   `json:"socialSharingEnabled"`
+}
+
 type planPayload struct {
 	Name        string  `json:"name"`
 	Description string  `json:"description"`
@@ -278,6 +329,34 @@ func slugify(s string) string {
 		s = strings.ReplaceAll(s, "--", "-")
 	}
 	return s
+}
+
+func nullIfBlank(value string) any {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return nil
+	}
+	return value
+}
+
+func normalizeTags(value string) string {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return "[]"
+	}
+	if strings.HasPrefix(value, "[") {
+		return value
+	}
+	parts := strings.Split(value, ",")
+	items := make([]string, 0, len(parts))
+	for _, part := range parts {
+		part = strings.TrimSpace(part)
+		if part != "" {
+			items = append(items, part)
+		}
+	}
+	encoded, _ := json.Marshal(items)
+	return string(encoded)
 }
 
 func (s *Server) handleRegister(w http.ResponseWriter, r *http.Request) {
@@ -836,24 +915,46 @@ func (s *Server) handleUpdatePost(w http.ResponseWriter, r *http.Request) { s.up
 func (s *Server) handleDeletePost(w http.ResponseWriter, r *http.Request) { s.deleteItem(w, r, "blog_posts", chi.URLParam(r, "postId")) }
 func (s *Server) handlePublishPost(w http.ResponseWriter, r *http.Request) { s.setPostStatus(w, r, "published") }
 func (s *Server) handleUnpublishPost(w http.ResponseWriter, r *http.Request) { s.setPostStatus(w, r, "draft") }
+func (s *Server) handleDuplicatePost(w http.ResponseWriter, r *http.Request) {
+	siteID := chi.URLParam(r, "id")
+	tenantID, _, err := s.siteMeta(r.Context(), siteID)
+	if err != nil { writeAPIError(w, 404, "not_found", "Site not found"); return }
+	var post postPayload
+	err = s.db.QueryRowContext(r.Context(), `select title,slug,excerpt,content,featured_image_url,author,tags_json,seo_title,seo_description,visibility from blog_posts where site_id=$1 and id=$2`, siteID, chi.URLParam(r, "postId")).
+		Scan(&post.Title, &post.Slug, &post.Excerpt, &post.Content, &post.FeaturedImage, &post.Author, &post.Tags, &post.SEOTitle, &post.SEODescription, &post.Visibility)
+	if err != nil { writeAPIError(w, 404, "not_found", "Post not found"); return }
+	post.Title = strings.TrimSpace(post.Title) + " Copy"
+	post.Slug = slugify(post.Slug + "-copy")
+	post.Status = "draft"
+	_, err = s.db.ExecContext(r.Context(), `insert into blog_posts(id,tenant_id,site_id,title,slug,excerpt,content,featured_image_url,author,tags_json,seo_title,seo_description,visibility,status,published_at,created_at,updated_at) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb,$11,$12,$13,'draft',null,now(),now())`,
+		uuid.NewString(), tenantID, siteID, post.Title, post.Slug, post.Excerpt, post.Content, post.FeaturedImage, post.Author, normalizeTags(post.Tags), post.SEOTitle, post.SEODescription, normalizeStatus(post.Visibility, "public", "public", "members", "paid"))
+	if err != nil { writeAPIError(w, 409, "save_failed", "Post could not be duplicated"); return }
+	s.handleListPosts(w, r)
+}
+func (s *Server) handleTrashPost(w http.ResponseWriter, r *http.Request) { s.setPostStatus(w, r, "trash") }
 func (s *Server) handleListBlogCategories(w http.ResponseWriter, r *http.Request) { s.listItems(w, r, `select id,name,slug,description,updated_at from blog_categories where site_id=$1 order by updated_at desc`, []string{"id","name","slug","description","updatedAt"}) }
-func (s *Server) handleCreateBlogCategory(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, map[string]any{"success": true}) }
-func (s *Server) handleUpdateBlogCategory(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, map[string]any{"success": true}) }
+func (s *Server) handleCreateBlogCategory(w http.ResponseWriter, r *http.Request) { s.upsertBlogCategory(w, r, false) }
+func (s *Server) handleUpdateBlogCategory(w http.ResponseWriter, r *http.Request) { s.upsertBlogCategory(w, r, true) }
 func (s *Server) handleDeleteBlogCategory(w http.ResponseWriter, r *http.Request) { s.deleteItem(w, r, "blog_categories", chi.URLParam(r, "categoryId")) }
 func (s *Server) handleListBlogTags(w http.ResponseWriter, r *http.Request) { s.listItems(w, r, `select id,name,slug,visibility,updated_at from blog_tags where site_id=$1 order by updated_at desc`, []string{"id","name","slug","visibility","updatedAt"}) }
-func (s *Server) handleCreateBlogTag(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, map[string]any{"success": true}) }
-func (s *Server) handleUpdateBlogTag(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, map[string]any{"success": true}) }
+func (s *Server) handleCreateBlogTag(w http.ResponseWriter, r *http.Request) { s.upsertBlogTag(w, r, false) }
+func (s *Server) handleUpdateBlogTag(w http.ResponseWriter, r *http.Request) { s.upsertBlogTag(w, r, true) }
 func (s *Server) handleDeleteBlogTag(w http.ResponseWriter, r *http.Request) { s.deleteItem(w, r, "blog_tags", chi.URLParam(r, "tagId")) }
 func (s *Server) handleListBlogAuthors(w http.ResponseWriter, r *http.Request) { s.listItems(w, r, `select id,name,email,role,bio,updated_at from blog_authors where site_id=$1 order by updated_at desc`, []string{"id","name","email","role","bio","updatedAt"}) }
-func (s *Server) handleCreateBlogAuthor(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, map[string]any{"success": true}) }
-func (s *Server) handleUpdateBlogAuthor(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, map[string]any{"success": true}) }
+func (s *Server) handleCreateBlogAuthor(w http.ResponseWriter, r *http.Request) { s.upsertBlogAuthor(w, r, false) }
+func (s *Server) handleUpdateBlogAuthor(w http.ResponseWriter, r *http.Request) { s.upsertBlogAuthor(w, r, true) }
 func (s *Server) handleDeleteBlogAuthor(w http.ResponseWriter, r *http.Request) { s.deleteItem(w, r, "blog_authors", chi.URLParam(r, "authorId")) }
 func (s *Server) handleGetNewsletterSettings(w http.ResponseWriter, r *http.Request) { s.getSingleton(w, r, `select id,enabled,sender_name,sender_email,send_posts_as_email,settings_json,updated_at from newsletter_settings where site_id=$1`, []string{"id","enabled","senderName","senderEmail","sendPostsAsEmail","settingsJson","updatedAt"}) }
-func (s *Server) handleUpsertNewsletterSettings(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, map[string]any{"success": true}) }
+func (s *Server) handleUpsertNewsletterSettings(w http.ResponseWriter, r *http.Request) { s.upsertNewsletterSettings(w, r) }
+func (s *Server) handleGetBlogSettings(w http.ResponseWriter, r *http.Request) { s.getSingleton(w, r, `select id,blog_title,description,coalesce(default_author_id::text,''),rss_enabled,comments_enabled,canonical_url,posts_per_page,social_sharing_enabled,settings_json,updated_at from blog_settings where site_id=$1`, []string{"id","blogTitle","description","defaultAuthorId","rssEnabled","commentsEnabled","canonicalUrl","postsPerPage","socialSharingEnabled","settingsJson","updatedAt"}) }
+func (s *Server) handleUpsertBlogSettings(w http.ResponseWriter, r *http.Request) { s.upsertBlogSettings(w, r) }
 func (s *Server) handleListBlogMembers(w http.ResponseWriter, r *http.Request) { s.listItems(w, r, `select id,name,email,member_type,status,joined_at,updated_at from blog_members where site_id=$1 order by updated_at desc`, []string{"id","name","email","memberType","status","joinedAt","updatedAt"}) }
-func (s *Server) handleCreateBlogMember(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, map[string]any{"success": true}) }
-func (s *Server) handleUpdateBlogMember(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, map[string]any{"success": true}) }
+func (s *Server) handleCreateBlogMember(w http.ResponseWriter, r *http.Request) { s.upsertBlogMember(w, r, false) }
+func (s *Server) handleUpdateBlogMember(w http.ResponseWriter, r *http.Request) { s.upsertBlogMember(w, r, true) }
 func (s *Server) handleDeleteBlogMember(w http.ResponseWriter, r *http.Request) { s.deleteItem(w, r, "blog_members", chi.URLParam(r, "memberId")) }
+func (s *Server) handleListBlogComments(w http.ResponseWriter, r *http.Request) { s.listItems(w, r, `select c.id,coalesce(c.post_id::text,''),c.content,c.author_name,p.title,c.status,c.created_at from blog_comments c left join blog_posts p on p.id=c.post_id where c.site_id=$1 order by c.created_at desc`, []string{"id","postId","content","authorName","postTitle","status","createdAt"}) }
+func (s *Server) handleApproveBlogComment(w http.ResponseWriter, r *http.Request) { s.setBlogCommentStatus(w, r, "approved") }
+func (s *Server) handleTrashBlogComment(w http.ResponseWriter, r *http.Request) { s.setBlogCommentStatus(w, r, "trash") }
 func (s *Server) handleGetBlogAnalytics(w http.ResponseWriter, r *http.Request) { s.getSingleton(w, r, `select coalesce(sum(views),0),coalesce(sum(signups),0),coalesce(sum(newsletter_opens),0) from blog_analytics where site_id=$1`, []string{"views","signups","newsletterOpens"}) }
 func (s *Server) handleListSubscriptionPlans(w http.ResponseWriter, r *http.Request) { s.listItems(w, r, `select id,name,description,price,billing_interval,trial_days,status,updated_at from subscription_plans where site_id=$1 order by updated_at desc`, []string{"id","name","description","price","interval","trial","status","updatedAt"}) }
 func (s *Server) handleGetSubscriptionPlan(w http.ResponseWriter, r *http.Request) { s.getItem(w, r, `select id,name,description,price,billing_interval,trial_days,status,updated_at from subscription_plans where site_id=$1 and id=$2`, chi.URLParam(r, "planId"), []string{"id","name","description","price","interval","trial","status","updatedAt"}) }
@@ -882,16 +983,16 @@ func (s *Server) upsertPost(w http.ResponseWriter, r *http.Request, update bool)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil { writeAPIError(w, 400, "invalid_json", "Invalid request body"); return }
 	if req.Title == "" { writeAPIError(w, 400, "validation_error", "Title is required"); return }
 	slug := slugify(req.Slug); if slug == "" { slug = slugify(req.Title) }
-	status := normalizeStatus(req.Status, "draft", "draft", "published")
+	status := normalizeStatus(req.Status, "draft", "draft", "published", "scheduled", "private", "trash")
 	visibility := normalizeStatus(req.Visibility, "public", "public", "members", "paid")
 	var publishedAt any = nil
 	if status == "published" { publishedAt = time.Now().UTC() }
 	if update {
-		_, err = s.db.ExecContext(r.Context(), `update blog_posts set title=$1,slug=$2,excerpt=$3,content=$4,featured_image_url=$5,author=$6,tags_json=$7,seo_title=$8,seo_description=$9,visibility=$10,status=$11,published_at=$12,updated_at=now() where site_id=$13 and id=$14`,
-			req.Title, slug, req.Excerpt, req.Content, req.FeaturedImage, req.Author, req.Tags, req.SEOTitle, req.SEODescription, visibility, status, publishedAt, siteID, chi.URLParam(r, "postId"))
+		_, err = s.db.ExecContext(r.Context(), `update blog_posts set title=$1,slug=$2,excerpt=$3,content=$4,featured_image_url=$5,author=$6,tags_json=$7::jsonb,seo_title=$8,seo_description=$9,visibility=$10,status=$11,published_at=$12,updated_at=now() where site_id=$13 and id=$14`,
+			req.Title, slug, req.Excerpt, req.Content, req.FeaturedImage, req.Author, normalizeTags(req.Tags), req.SEOTitle, req.SEODescription, visibility, status, publishedAt, siteID, chi.URLParam(r, "postId"))
 	} else {
-		_, err = s.db.ExecContext(r.Context(), `insert into blog_posts(id,tenant_id,site_id,title,slug,excerpt,content,featured_image_url,author,tags_json,seo_title,seo_description,visibility,status,published_at,created_at,updated_at) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,now(),now())`,
-			uuid.NewString(), tenantID, siteID, req.Title, slug, req.Excerpt, req.Content, req.FeaturedImage, req.Author, req.Tags, req.SEOTitle, req.SEODescription, visibility, status, publishedAt)
+		_, err = s.db.ExecContext(r.Context(), `insert into blog_posts(id,tenant_id,site_id,title,slug,excerpt,content,featured_image_url,author,tags_json,seo_title,seo_description,visibility,status,published_at,created_at,updated_at) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb,$11,$12,$13,$14,$15,now(),now())`,
+			uuid.NewString(), tenantID, siteID, req.Title, slug, req.Excerpt, req.Content, req.FeaturedImage, req.Author, normalizeTags(req.Tags), req.SEOTitle, req.SEODescription, visibility, status, publishedAt)
 	}
 	if err != nil { writeAPIError(w, 409, "save_failed", "Post could not be saved"); return }
 	s.handleListPosts(w, r)
@@ -904,6 +1005,106 @@ func (s *Server) setPostStatus(w http.ResponseWriter, r *http.Request, status st
 	_, err := s.db.ExecContext(r.Context(), `update blog_posts set status=$1,published_at=$2,updated_at=now() where site_id=$3 and id=$4`, status, publishedAt, siteID, chi.URLParam(r, "postId"))
 	if err != nil { writeAPIError(w, 500, "update_failed", "Post status could not be updated"); return }
 	s.handleGetPost(w, r)
+}
+
+func (s *Server) upsertBlogCategory(w http.ResponseWriter, r *http.Request, update bool) {
+	siteID := chi.URLParam(r, "id")
+	tenantID, _, err := s.siteMeta(r.Context(), siteID)
+	if err != nil { writeAPIError(w, 404, "not_found", "Site not found"); return }
+	var req blogCategoryPayload
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil { writeAPIError(w, 400, "invalid_json", "Invalid request body"); return }
+	if strings.TrimSpace(req.Name) == "" { writeAPIError(w, 400, "validation_error", "Category name is required"); return }
+	slug := slugify(req.Slug); if slug == "" { slug = slugify(req.Name) }
+	if update {
+		_, err = s.db.ExecContext(r.Context(), `update blog_categories set name=$1,slug=$2,description=$3,updated_at=now() where site_id=$4 and id=$5`, req.Name, slug, req.Description, siteID, chi.URLParam(r, "categoryId"))
+	} else {
+		_, err = s.db.ExecContext(r.Context(), `insert into blog_categories(id,tenant_id,site_id,name,slug,description,created_at,updated_at) values($1,$2,$3,$4,$5,$6,now(),now())`, uuid.NewString(), tenantID, siteID, req.Name, slug, req.Description)
+	}
+	if err != nil { writeAPIError(w, 409, "save_failed", "Category could not be saved"); return }
+	s.handleListBlogCategories(w, r)
+}
+
+func (s *Server) upsertBlogTag(w http.ResponseWriter, r *http.Request, update bool) {
+	siteID := chi.URLParam(r, "id")
+	tenantID, _, err := s.siteMeta(r.Context(), siteID)
+	if err != nil { writeAPIError(w, 404, "not_found", "Site not found"); return }
+	var req blogTagPayload
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil { writeAPIError(w, 400, "invalid_json", "Invalid request body"); return }
+	if strings.TrimSpace(req.Name) == "" { writeAPIError(w, 400, "validation_error", "Tag name is required"); return }
+	slug := slugify(req.Slug); if slug == "" { slug = slugify(req.Name) }
+	visibility := normalizeStatus(req.Visibility, "public", "public", "private")
+	if update {
+		_, err = s.db.ExecContext(r.Context(), `update blog_tags set name=$1,slug=$2,visibility=$3,updated_at=now() where site_id=$4 and id=$5`, req.Name, slug, visibility, siteID, chi.URLParam(r, "tagId"))
+	} else {
+		_, err = s.db.ExecContext(r.Context(), `insert into blog_tags(id,tenant_id,site_id,name,slug,visibility,created_at,updated_at) values($1,$2,$3,$4,$5,$6,now(),now())`, uuid.NewString(), tenantID, siteID, req.Name, slug, visibility)
+	}
+	if err != nil { writeAPIError(w, 409, "save_failed", "Tag could not be saved"); return }
+	s.handleListBlogTags(w, r)
+}
+
+func (s *Server) upsertBlogAuthor(w http.ResponseWriter, r *http.Request, update bool) {
+	siteID := chi.URLParam(r, "id")
+	tenantID, _, err := s.siteMeta(r.Context(), siteID)
+	if err != nil { writeAPIError(w, 404, "not_found", "Site not found"); return }
+	var req blogAuthorPayload
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil { writeAPIError(w, 400, "invalid_json", "Invalid request body"); return }
+	if strings.TrimSpace(req.Name) == "" { writeAPIError(w, 400, "validation_error", "Author name is required"); return }
+	if update {
+		_, err = s.db.ExecContext(r.Context(), `update blog_authors set name=$1,email=$2,role=$3,bio=$4,updated_at=now() where site_id=$5 and id=$6`, req.Name, req.Email, req.Role, req.Bio, siteID, chi.URLParam(r, "authorId"))
+	} else {
+		_, err = s.db.ExecContext(r.Context(), `insert into blog_authors(id,tenant_id,site_id,name,email,role,bio,created_at,updated_at) values($1,$2,$3,$4,$5,$6,$7,now(),now())`, uuid.NewString(), tenantID, siteID, req.Name, req.Email, normalizeStatus(req.Role, "author", "author", "editor", "admin"), req.Bio)
+	}
+	if err != nil { writeAPIError(w, 409, "save_failed", "Author could not be saved"); return }
+	s.handleListBlogAuthors(w, r)
+}
+
+func (s *Server) upsertNewsletterSettings(w http.ResponseWriter, r *http.Request) {
+	siteID := chi.URLParam(r, "id")
+	tenantID, _, err := s.siteMeta(r.Context(), siteID)
+	if err != nil { writeAPIError(w, 404, "not_found", "Site not found"); return }
+	var req newsletterPayload
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil { writeAPIError(w, 400, "invalid_json", "Invalid request body"); return }
+	_, err = s.db.ExecContext(r.Context(), `insert into newsletter_settings(id,tenant_id,site_id,enabled,sender_name,sender_email,send_posts_as_email,settings_json,created_at,updated_at) values($1,$2,$3,$4,$5,$6,$7,'{}'::jsonb,now(),now()) on conflict (site_id) do update set enabled=excluded.enabled,sender_name=excluded.sender_name,sender_email=excluded.sender_email,send_posts_as_email=excluded.send_posts_as_email,updated_at=now()`,
+		uuid.NewString(), tenantID, siteID, req.Enabled, req.SenderName, req.SenderEmail, req.SendPostsAsEmail)
+	if err != nil { writeAPIError(w, 409, "save_failed", "Newsletter settings could not be saved"); return }
+	s.handleGetNewsletterSettings(w, r)
+}
+
+func (s *Server) upsertBlogSettings(w http.ResponseWriter, r *http.Request) {
+	siteID := chi.URLParam(r, "id")
+	tenantID, _, err := s.siteMeta(r.Context(), siteID)
+	if err != nil { writeAPIError(w, 404, "not_found", "Site not found"); return }
+	var req blogSettingsPayload
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil { writeAPIError(w, 400, "invalid_json", "Invalid request body"); return }
+	if req.PostsPerPage <= 0 { req.PostsPerPage = 10 }
+	_, err = s.db.ExecContext(r.Context(), `insert into blog_settings(id,tenant_id,site_id,blog_title,description,default_author_id,rss_enabled,comments_enabled,canonical_url,posts_per_page,social_sharing_enabled,settings_json,created_at,updated_at) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,'{}'::jsonb,now(),now()) on conflict (site_id) do update set blog_title=excluded.blog_title,description=excluded.description,default_author_id=excluded.default_author_id,rss_enabled=excluded.rss_enabled,comments_enabled=excluded.comments_enabled,canonical_url=excluded.canonical_url,posts_per_page=excluded.posts_per_page,social_sharing_enabled=excluded.social_sharing_enabled,updated_at=now()`,
+		uuid.NewString(), tenantID, siteID, req.BlogTitle, req.Description, nullIfBlank(req.DefaultAuthorID), req.RSSEnabled, req.CommentsEnabled, req.CanonicalURL, req.PostsPerPage, req.SocialSharingEnabled)
+	if err != nil { writeAPIError(w, 409, "save_failed", "Blog settings could not be saved"); return }
+	s.handleGetBlogSettings(w, r)
+}
+
+func (s *Server) upsertBlogMember(w http.ResponseWriter, r *http.Request, update bool) {
+	siteID := chi.URLParam(r, "id")
+	tenantID, _, err := s.siteMeta(r.Context(), siteID)
+	if err != nil { writeAPIError(w, 404, "not_found", "Site not found"); return }
+	var req blogMemberPayload
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil { writeAPIError(w, 400, "invalid_json", "Invalid request body"); return }
+	if strings.TrimSpace(req.Name) == "" { writeAPIError(w, 400, "validation_error", "Member name is required"); return }
+	memberType := normalizeStatus(req.MemberType, "free", "free", "paid")
+	status := normalizeStatus(req.Status, "active", "active", "paused", "invited")
+	if update {
+		_, err = s.db.ExecContext(r.Context(), `update blog_members set name=$1,email=$2,member_type=$3,status=$4,updated_at=now() where site_id=$5 and id=$6`, req.Name, req.Email, memberType, status, siteID, chi.URLParam(r, "memberId"))
+	} else {
+		_, err = s.db.ExecContext(r.Context(), `insert into blog_members(id,tenant_id,site_id,name,email,member_type,status,joined_at,created_at,updated_at) values($1,$2,$3,$4,$5,$6,$7,now(),now(),now())`, uuid.NewString(), tenantID, siteID, req.Name, req.Email, memberType, status)
+	}
+	if err != nil { writeAPIError(w, 409, "save_failed", "Member could not be saved"); return }
+	s.handleListBlogMembers(w, r)
+}
+
+func (s *Server) setBlogCommentStatus(w http.ResponseWriter, r *http.Request, status string) {
+	_, err := s.db.ExecContext(r.Context(), `update blog_comments set status=$1,updated_at=now() where site_id=$2 and id=$3`, status, chi.URLParam(r, "id"), chi.URLParam(r, "commentId"))
+	if err != nil { writeAPIError(w, 500, "update_failed", "Comment could not be updated"); return }
+	s.handleListBlogComments(w, r)
 }
 
 func (s *Server) upsertSubscriptionPlan(w http.ResponseWriter, r *http.Request, update bool) {
