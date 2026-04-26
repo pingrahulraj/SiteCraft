@@ -53,10 +53,13 @@ const submit = async () => {
       identifier: identifier.value,
       password: password.value
     })
-    localStorage.setItem('sitecraft_token', data.token)
+    const token = data?.item?.token || data?.token || ''
+    if (!token) throw new Error('missing_token')
+    localStorage.setItem('sitecraft_token', token)
     await router.push('/dashboard')
   } catch (err) {
-    error.value = err?.response?.data?.error === 'invalid_credentials'
+    const code = err?.response?.data?.error?.code
+    error.value = code === 'invalid_credentials'
       ? 'Incorrect email or password.'
       : 'Login failed. Please try again.'
   } finally {

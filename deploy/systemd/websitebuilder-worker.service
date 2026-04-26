@@ -1,0 +1,19 @@
+[Unit]
+Description=SiteCraft worker placeholder
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=sitecraft
+Group=sitecraft
+WorkingDirectory=/opt/sitecraft/backend
+EnvironmentFile=/etc/sitecraft/sitecraft.env
+ExecStart=/bin/sh -c 'while true; do sleep 3600; done'
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

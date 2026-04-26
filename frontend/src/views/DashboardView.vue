@@ -56,9 +56,14 @@
             <p class="lead">Loading the current workspace projects.</p>
           </div>
           <div v-else-if="loadError" class="surface-card">
-            <p class="eyebrow">Fallback</p>
-            <h2>Showing seed projects</h2>
+            <p class="eyebrow">Unavailable</p>
+            <h2>Projects could not be loaded</h2>
             <p class="lead">{{ loadError }}</p>
+          </div>
+          <div v-else-if="!projects.length" class="surface-card">
+            <p class="eyebrow">Empty</p>
+            <h2>No sites yet</h2>
+            <p class="lead">Create your first site to start building immediately.</p>
           </div>
           <article v-for="project in projects" :key="project.id" class="project-card" role="button" tabindex="0" @click="openProject(project.id)" @keydown.enter="openProject(project.id)">
             <div class="project-thumb" :class="thumbClass(project.id)">
@@ -110,34 +115,38 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '../services/api'
 
 const router = useRouter()
-const tenantSlug = 'acme-studio'
 const projects = ref([])
 const loading = ref(false)
 const loadError = ref('')
 const showModal = ref(false)
 const saving = ref(false)
 const form = reactive({ name: '', description: '' })
-
-const fallbackProjects = () => ([
-  { id: 1, name: 'Marketing site', description: 'Primary public-facing site with a clean landing experience.', status: 'published', previewUrl: 'http://localhost:8081/acme-studio/marketing', createdAt: 'seeded' },
-  { id: 2, name: 'Builder console', description: 'Internal workspace for composing and managing HTML output.', status: 'draft', previewUrl: 'http://localhost:8081/acme-studio/console', createdAt: 'seeded' },
-  { id: 3, name: 'Client landing page', description: 'Tenant-specific campaign landing page ready for review.', status: 'review', previewUrl: 'http://localhost:8081/acme-studio/client', createdAt: 'seeded' }
-])
+const demoSyncAttempted = ref(false)
 
 const loadProjects = async () => {
   loading.value = true
   loadError.value = ''
   try {
-    const { data } = await api.get('/projects', { params: { tenantSlug } })
-    projects.value = data.projects?.length ? data.projects : fallbackProjects()
+    if (!demoSyncAttempted.value) {
+      demoSyncAttempted.value = true
+      try {
+        await api.post('/seed')
+      } catch {
+        // Development-only sync; project listing should still load even if it is unavailable.
+      }
+    }
+    const { data } = await api.get('/projects')
+    projects.value = Array.isArray(data.projects)
+      ? data.projects
+      : (Array.isArray(data.items) ? data.items : [])
   } catch {
-    loadError.value = 'The live project list could not be loaded, so the seeded examples are shown instead.'
-    projects.value = fallbackProjects()
+    loadError.value = 'The live project list could not be loaded right now.'
+    projects.value = []
   } finally {
     loading.value = false
   }
@@ -155,16 +164,32 @@ const closeModal = () => {
 const createProject = async () => {
   saving.value = true
   try {
-    await api.post('/projects', { tenantSlug, name: form.name, description: form.description })
+    await api.post('/projects', { name: form.name, description: form.description })
     await loadProjects()
     closeModal()
   } finally {
     saving.value = false
   }
 }
+const handleVisibilityRefresh = () => {
+  if (document.visibilityState === 'visible') {
+    loadProjects()
+  }
+}
+const handleWindowFocus = () => {
+  loadProjects()
+}
 const signOut = async () => {
   localStorage.removeItem('sitecraft_token')
   await router.push('/login')
 }
-onMounted(loadProjects)
+onMounted(() => {
+  loadProjects()
+  document.addEventListener('visibilitychange', handleVisibilityRefresh)
+  window.addEventListener('focus', handleWindowFocus)
+})
+onUnmounted(() => {
+  document.removeEventListener('visibilitychange', handleVisibilityRefresh)
+  window.removeEventListener('focus', handleWindowFocus)
+})
 </script>

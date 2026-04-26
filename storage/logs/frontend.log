@@ -132,3 +132,232 @@ Node.js v24.14.1
 
   [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5137[22m/[39m
 [2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m3:49:16 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m3:49:46 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m3:50:14 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m3:54:05 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:12:39 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m4:12:39 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /src/stores/blogs.js (resolved id: C:/Development/SiteCraft/frontend/src/stores/blogs.js) in C:/Development/SiteCraft/frontend/src/views/SiteDashboardView.vue. Does the file exist?
+[2m4:13:15 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m4:16:07 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/router.js[22m
+[2m4:16:19 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m4:16:42 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:17:11 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/BlogsView.vue[22m
+[2m4:19:39 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:21:55 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:22:39 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:25:37 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/BlogsView.vue[22m
+[2m4:25:45 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:26:57 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/BlogsView.vue[22m
+[2m4:27:03 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m4:31:34 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m4:32:40 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/SiteDashboardView.vue[22m
+[2m4:33:06 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m5:58:44 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m6:00:11 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m6:02:12 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m6:03:06 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m6:03:31 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m6:16:49 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ new dependencies optimized: [33mmonaco-editor[32m[39m
+[2m6:16:49 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ optimized dependencies changed. reloading[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[2m6:29:16 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m6:29:23 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/editor/PreviewPanel.vue[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m255[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5137[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+[31merror when starting dev server:
+Error: Port 5137 is already in use
+    at Server.onError$1 (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:14933:28)
+    at Server.emit (node:events:508:28)
+    at emitErrorNT (node:net:1984:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+[31merror when starting dev server:
+Error: Port 5137 is already in use
+    at Server.onError$1 (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:14933:28)
+    at Server.emit (node:events:508:28)
+    at emitErrorNT (node:net:1984:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+[31merror when starting dev server:
+Error: Port 5137 is already in use
+    at Server.onError$1 (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:14933:28)
+    at Server.emit (node:events:508:28)
+    at emitErrorNT (node:net:1984:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m1312[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5137[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[2m7:30:40 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m288[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5137[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m251[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5137[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m319[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5137[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m309[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5137[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[2m1:37:06 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[2m1:37:24 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.vue[22m
+[2m1:37:30 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/main.js[22m
+[2m1:37:40 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m1:38:02 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/router.js[22m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+[31merror when starting dev server:
+Error: Port 5137 is already in use
+    at Server.onError$1 (file:///C:/Development/SiteCraft/frontend/node_modules/vite/dist/node/chunks/config.js:14933:28)
+    at Server.emit (node:events:508:28)
+    at emitErrorNT (node:net:1984:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m3390[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5137[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m331[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5137[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[2m3:46:11 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m3:46:11 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[2m3:49:19 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/editor/PreviewPanel.vue[22m
+[2m3:49:19 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m3:49:19 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[2m3:52:13 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/editor/PreviewPanel.vue[22m
+[2m3:52:13 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m3:52:13 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m3:52:33 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m4:11:43 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/editor/PreviewPanel.vue[22m
+[2m4:11:51 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[2m4:11:56 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m4:12:11 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m4:12:15 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/editor/PreviewPanel.vue[22m
+[2m4:12:41 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m311[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5137[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[2m4:39:00 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[2m4:41:58 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/EditorView.vue[22m
+[2m4:41:58 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[33mThe file does not exist at "C:/Development/SiteCraft/frontend/node_modules/.vite/deps/html.worker.js?worker_file&type=module" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[2m5:05:17 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/DashboardView.vue[22m
+
+> sitecraft-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5137 --strictPort
+
+
+  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m264[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5137[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m5:08:19 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/views/DashboardView.vue[22m

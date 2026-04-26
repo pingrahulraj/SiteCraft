@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About | Maison Vela</title>
+    <meta name="description" content="About page for the fashion demo." />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container nav-row">
+          <a class="brand" href="index.html"><span class="brand-mark"></span><span>Maison Vela</span></a>
+          <nav class="site-nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="shop.html">Shop</a><a href="collections.html">Collections</a><a href="contact.html">Contact</a><button class="cart-button" type="button" data-cart-toggle>Cart (<span id="cart-count">0</span>)</button></nav>
+        </div>
+      </header>
+      <main><section class="page-hero"><div class="container"><p class="eyebrow">About</p><h1>Designed as a polished storefront test bed for fashion-focused client demos.</h1><p class="lead">Maison Vela shows how a premium brand can live comfortably in a simple HTML-first workflow.</p></div></section></main>
+      <footer class="site-footer">
+        <div class="container footer-grid">
+          <div><strong>Maison Vela</strong><p>Professional demo website built to test editing, preview, publish, and delivery flows in SiteCraft.</p></div>
+          <div><p>Developer-first HTML workspace. Responsive layout. Frontend-only interactions where needed.</p></div>
+        </div>
+      </footer>
+    </div>
+    <aside class="cart-drawer" data-cart-drawer hidden>
+      <div class="cart-head"><h2>Cart</h2><button type="button" class="mini-ghost" data-cart-close>Close</button></div>
+      <div class="cart-items" data-cart-items></div>
+      <div class="cart-empty" data-cart-empty>Your cart is empty.</div>
+      <div class="cart-footer"><div class="subtotal-row"><span>Subtotal</span><strong data-cart-subtotal>INR 0.00</strong></div><button type="button" class="primary-button" data-fake-checkout>Checkout</button></div>
+    </aside>
+  </body>
+</html>

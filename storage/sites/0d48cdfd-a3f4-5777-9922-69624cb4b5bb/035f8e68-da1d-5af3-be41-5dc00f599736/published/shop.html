@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop | Maison Vela</title>
+    <meta name="description" content="Shop page for the fashion demo." />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container nav-row">
+          <a class="brand" href="index.html"><span class="brand-mark"></span><span>Maison Vela</span></a>
+          <nav class="site-nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="shop.html">Shop</a><a href="collections.html">Collections</a><a href="contact.html">Contact</a><button class="cart-button" type="button" data-cart-toggle>Cart (<span id="cart-count">0</span>)</button></nav>
+        </div>
+      </header>
+      <main><section class="page-hero"><div class="container"><p class="eyebrow">Fashion store</p><h1>Searchable product grid with filters, cart, and compact merchandising.</h1></div></section><section class="section"><div class="container"><div class="filter-row"><input data-filter-input type="search" placeholder="Search products" /><select data-filter-select data-filter-category><option value="">All categories</option><option value="Shirts">Shirts</option><option value="Outerwear">Outerwear</option><option value="Accessories">Accessories</option><option value="Bottoms">Bottoms</option></select><select data-filter-select data-filter-extra><option value="">All sizes</option><option value="S">Size S</option><option value="M">Size M</option><option value="L">Size L</option></select><select data-filter-select data-filter-sort><option value="">Sort</option><option value="low">Price low to high</option><option value="high">Price high to low</option></select></div><div class="card-grid" data-product-grid><article class="product-card" data-product-card data-name="Linen shirt" data-category="Shirts" data-extra="M" data-price="84"><span class="badge">New</span><h3>Linen shirt</h3><p>Lightweight staple with a clean collar.</p><strong>INR 84.00</strong><button class="primary-button" data-add-to-cart data-name="Linen shirt" data-price="84">Add to cart</button></article><article class="product-card" data-product-card data-name="Tailored blazer" data-category="Outerwear" data-extra="L" data-price="168"><span class="badge">Core</span><h3>Tailored blazer</h3><p>Minimal structure with a sharp lapel.</p><strong>INR 168.00</strong><button class="primary-button" data-add-to-cart data-name="Tailored blazer" data-price="168">Add to cart</button></article><article class="product-card" data-product-card data-name="Cotton dress" data-category="Dresses" data-extra="S" data-price="126"><span class="badge">Seasonal</span><h3>Cotton dress</h3><p>Soft lines with practical movement.</p><strong>INR 126.00</strong><button class="primary-button" data-add-to-cart data-name="Cotton dress" data-price="126">Add to cart</button></article><article class="product-card" data-product-card data-name="Silk scarf" data-category="Accessories" data-extra="S" data-price="52"><span class="badge">Gift</span><h3>Silk scarf</h3><p>Accent layer for evening and travel.</p><strong>INR 52.00</strong><button class="primary-button" data-add-to-cart data-name="Silk scarf" data-price="52">Add to cart</button></article><article class="product-card" data-product-card data-name="Denim jacket" data-category="Outerwear" data-extra="M" data-price="144"><span class="badge">Top seller</span><h3>Denim jacket</h3><p>Structured daily layer with contrast seams.</p><strong>INR 144.00</strong><button class="primary-button" data-add-to-cart data-name="Denim jacket" data-price="144">Add to cart</button></article><article class="product-card" data-product-card data-name="Leather belt" data-category="Accessories" data-extra="L" data-price="46"><span class="badge">Utility</span><h3>Leather belt</h3><p>Minimal finish with matte hardware.</p><strong>INR 46.00</strong><button class="primary-button" data-add-to-cart data-name="Leather belt" data-price="46">Add to cart</button></article><article class="product-card" data-product-card data-name="Wool trouser" data-category="Bottoms" data-extra="M" data-price="132"><span class="badge">Refined</span><h3>Wool trouser</h3><p>Sharp taper for work and travel.</p><strong>INR 132.00</strong><button class="primary-button" data-add-to-cart data-name="Wool trouser" data-price="132">Add to cart</button></article><article class="product-card" data-product-card data-name="Evening top" data-category="Shirts" data-extra="S" data-price="92"><span class="badge">Event</span><h3>Evening top</h3><p>Clean silhouette with subtle sheen.</p><strong>INR 92.00</strong><button class="primary-button" data-add-to-cart data-name="Evening top" data-price="92">Add to cart</button></article></div></div></section></main>
+      <footer class="site-footer">
+        <div class="container footer-grid">
+          <div><strong>Maison Vela</strong><p>Professional demo website built to test editing, preview, publish, and delivery flows in SiteCraft.</p></div>
+          <div><p>Developer-first HTML workspace. Responsive layout. Frontend-only interactions where needed.</p></div>
+        </div>
+      </footer>
+    </div>
+    <aside class="cart-drawer" data-cart-drawer hidden>
+      <div class="cart-head"><h2>Cart</h2><button type="button" class="mini-ghost" data-cart-close>Close</button></div>
+      <div class="cart-items" data-cart-items></div>
+      <div class="cart-empty" data-cart-empty>Your cart is empty.</div>
+      <div class="cart-footer"><div class="subtotal-row"><span>Subtotal</span><strong data-cart-subtotal>INR 0.00</strong></div><button type="button" class="primary-button" data-fake-checkout>Checkout</button></div>
+    </aside>
+  </body>
+</html>

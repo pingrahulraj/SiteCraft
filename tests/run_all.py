@@ -14,8 +14,15 @@ TESTS = [
     "smoke.test_health",
     "smoke.test_database",
     "smoke.test_storage",
+    "smoke.test_ops_files",
+    "smoke.test_auth_security",
+    "smoke.test_tenant_isolation",
     "smoke.test_poc_flow",
+    "smoke.test_template_rendering",
+    "smoke.test_demo_site",
+    "smoke.test_demo_sites",
     "smoke.test_workspace_files",
+    "smoke.test_concurrency",
 ]
 
 

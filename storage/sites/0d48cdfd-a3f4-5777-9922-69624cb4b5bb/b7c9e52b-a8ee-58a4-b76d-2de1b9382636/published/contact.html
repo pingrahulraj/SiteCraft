@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact | {{ site.name }}</title>
+    <meta name="description" content="Contact {{ site.name }} to discuss business consulting and digital transformation advisory." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="contact">
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container nav-bar">
+          <a class="brand" href="index.html"><span class="brand-mark">CA</span><span>{{ site.name }}</span></a>
+          <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+          <nav class="site-nav" id="primary-nav">
+            <a class="nav-link" href="index.html">Home</a>
+            <a class="nav-link" href="about.html">About</a>
+            <a class="nav-link" href="services.html">Services</a>
+            <a class="nav-link" href="case-studies.html">Case Studies</a>
+            <a class="nav-link" href="pricing.html">Pricing</a>
+            <a class="nav-link" href="shop.html">Shop</a>
+            <a class="nav-link" href="subscriptions.html">Subscriptions</a>
+            <a class="nav-link" href="blogs.html">Blogs</a>
+            <a class="nav-link" href="contact.html">Contact</a>
+          </nav>
+          <div class="nav-actions">
+            <button class="cart-link" type="button" data-open-cart>Cart (<span data-cart-count>0</span>)</button>
+            <a class="button button-primary" href="contact.html">Book a strategy call</a>
+          </div>
+        </div>
+      </header>
+      <main>
+        <section class="page-hero">
+          <div class="container narrow">
+            <p class="eyebrow">Contact</p>
+            <h1>Tell us what is stuck and what a better operating rhythm would make possible.</h1>
+            <p class="page-intro">Use the form below to test frontend-only form behavior, or review the sample contact details for this demo site.</p>
+          </div>
+        </section>
+        <section class="section">
+          <div class="container split-panel">
+            <form class="contact-form" id="contact-form">
+              <label><span>Name</span><input type="text" name="name" placeholder="Ava Patel" required /></label>
+              <label><span>Email</span><input type="email" name="email" placeholder="ava@company.com" required /></label>
+              <label><span>Company</span><input type="text" name="company" placeholder="Client Advisory Studio" /></label>
+              <label><span>Message</span><textarea name="message" rows="6" placeholder="We need help tightening our offer, website, and operating system." required></textarea></label>
+              <button class="button button-primary" type="submit">Send inquiry</button>
+              <p class="form-message" id="contact-message" hidden>Thanks. This demo form has been submitted successfully on the frontend.</p>
+            </form>
+            <div class="contact-sidebar">
+              <div class="panel-card">
+                <p class="card-kicker">Direct contact</p>
+                <h3>Reach the advisory team</h3>
+                <p><strong>Email:</strong> hello@clientadvisorystudio.test</p>
+                <p><strong>Phone:</strong> +91 22 5555 0198</p>
+                <p><strong>Location:</strong> Mumbai, India</p>
+              </div>
+              <div class="panel-card">
+                <p class="card-kicker">FAQ</p>
+                <div class="faq-list">
+                  <article><h3>Do you work remotely?</h3><p>Yes. Most engagements are remote-first with optional onsite strategy sessions.</p></article>
+                  <article><h3>Can you support implementation?</h3><p>Yes. We often stay close during rollout to keep priorities moving.</p></article>
+                  <article><h3>How quickly can we start?</h3><p>Typical onboarding begins within one to two weeks depending on scope.</p></article>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="site-footer">
+        <div class="container footer-grid">
+          <div><strong>{{ site.name }}</strong><p>Practical consulting for firms improving growth, systems, and delivery.</p></div>
+          <div class="footer-links"><a href="index.html">Home</a><a href="about.html">About</a><a href="services.html">Services</a><a href="case-studies.html">Case Studies</a><a href="pricing.html">Pricing</a><a href="shop.html">Shop</a><a href="subscriptions.html">Subscriptions</a><a href="blogs.html">Blogs</a><a href="contact.html">Contact</a></div>
+        </div>
+      </footer>
+      <div class="cart-overlay" id="cart-overlay" hidden></div>
+      <aside class="cart-drawer" id="cart-drawer" aria-hidden="true">
+        <div class="cart-drawer__header"><h2>Cart</h2><button type="button" id="cart-close">Close</button></div>
+        <p class="empty-state" id="cart-empty">Your cart is empty. Add a few sample offers from the shop page.</p>
+        <div id="cart-items" hidden></div>
+        <div class="cart-drawer__footer"><div class="subtotal-row"><span>Subtotal</span><strong id="cart-subtotal">INR 0.00</strong></div><button class="button button-primary" type="button">Checkout placeholder</button></div>
+      </aside>
+    </div>
+    <script src="script.js" defer></script>
+  </body>
+</html>

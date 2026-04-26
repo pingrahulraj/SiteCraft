@@ -48,10 +48,12 @@ def delivery_base() -> str:
     return env.get("DELIVERY_BASE_URL") or f"http://localhost:{env.get('DELIVERY_PORT', '8083')}"
 
 
-def http_json(method: str, url: str, payload: dict | None = None) -> tuple[int, dict]:
-    headers = {"Content-Type": "application/json"}
+def http_json(method: str, url: str, payload: dict | None = None, headers: dict[str, str] | None = None) -> tuple[int, dict]:
+    merged_headers = {"Content-Type": "application/json"}
+    if headers:
+        merged_headers.update(headers)
     data = json.dumps(payload).encode("utf-8") if payload is not None else None
-    req = request.Request(url, method=method, data=data, headers=headers)
+    req = request.Request(url, method=method, data=data, headers=merged_headers)
     try:
         with request.urlopen(req, timeout=5) as response:
             body = response.read().decode("utf-8")
@@ -63,9 +65,10 @@ def http_json(method: str, url: str, payload: dict | None = None) -> tuple[int, 
         return 0, {}
 
 
-def http_text(url: str) -> tuple[int, str]:
+def http_text(url: str, headers: dict[str, str] | None = None) -> tuple[int, str]:
+    req = request.Request(url, headers=headers or {})
     try:
-        with request.urlopen(url, timeout=5) as response:
+        with request.urlopen(req, timeout=5) as response:
             return response.getcode(), response.read().decode("utf-8")
     except error.HTTPError as exc:
         return exc.code, exc.read().decode("utf-8")
@@ -80,6 +83,24 @@ def service_available(url: str) -> bool:
 
 def seed_state() -> dict:
     return json.loads((ROOT / "storage" / "seed_state.json").read_text(encoding="utf-8"))
+
+
+def auth_headers(token: str) -> dict[str, str]:
+    return {"Authorization": f"Bearer {token}"}
+
+
+def login_token(identifier: str = "ava", password: str = "Welcome123!") -> str:
+    status, data = http_json(
+        "POST",
+        f"{api_base()}/auth/login",
+        {"identifier": identifier, "password": password},
+    )
+    if status != 200:
+        raise RuntimeError(f"login failed: {status}")
+    token = ((data.get("item") or {}).get("token") or "").strip()
+    if not token:
+        raise RuntimeError("missing token")
+    return token
 
 
 def live_http_enabled() -> bool:

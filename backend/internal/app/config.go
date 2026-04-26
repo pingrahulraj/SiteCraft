@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -13,6 +14,7 @@ import (
 
 type Config struct {
 	AppName         string
+	AppEnv          string
 	APIPort         string
 	DeliveryPort    string
 	DeliveryBaseURL string
@@ -30,13 +32,15 @@ type Config struct {
 }
 
 func LoadConfig() Config {
+	storageRoot := resolveStorageRoot(env("STORAGE_ROOT", "./storage"))
 	return Config{
 		AppName:         env("APP_NAME", "WebsiteBuilder"),
+		AppEnv:          strings.ToLower(env("APP_ENV", env("ENV", "development"))),
 		APIPort:         env("API_PORT", "8080"),
 		DeliveryPort:    env("DELIVERY_PORT", "8083"),
 		DeliveryBaseURL: env("DELIVERY_BASE_URL", ""),
 		FrontendOrigin:  env("CORS_ALLOWED_ORIGINS", "http://localhost:5137"),
-		StorageRoot:     env("STORAGE_ROOT", "./storage"),
+		StorageRoot:     storageRoot,
 		JWTSecret:       env("JWT_SECRET", "change-me"),
 		DatabaseURL:     env("DATABASE_URL", ""),
 		DBHost:          env("DB_HOST", "127.0.0.1"),
@@ -46,6 +50,15 @@ func LoadConfig() Config {
 		DBPassword:      env("DB_PASSWORD", ""),
 		DBAdminDB:       env("DB_ADMIN_DB", "postgres"),
 		DBSSLMode:       env("DB_SSLMODE", env("PGSSLMODE", "disable")),
+	}
+}
+
+func (c Config) IsDevelopment() bool {
+	switch strings.ToLower(strings.TrimSpace(c.AppEnv)) {
+	case "", "dev", "development", "local":
+		return true
+	default:
+		return false
 	}
 }
 
@@ -106,4 +119,28 @@ func env(key, fallback string) string {
 		return value
 	}
 	return fallback
+}
+
+func resolveStorageRoot(value string) string {
+	if value == "" {
+		value = "./storage"
+	}
+	if filepath.IsAbs(value) {
+		return value
+	}
+	cwd, err := os.Getwd()
+	if err != nil {
+		return value
+	}
+	candidate := filepath.Clean(filepath.Join(cwd, value))
+	if filepath.Base(cwd) == "backend" {
+		repoRootCandidate := filepath.Clean(filepath.Join(cwd, "..", value))
+		if _, err := os.Stat(repoRootCandidate); err == nil {
+			return repoRootCandidate
+		}
+		if _, err := os.Stat(candidate); os.IsNotExist(err) {
+			return repoRootCandidate
+		}
+	}
+	return candidate
 }

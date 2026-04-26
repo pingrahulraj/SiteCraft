@@ -1,13 +1,193 @@
-<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Client landing page</title>
+    <title>{{ site.name }} | Consulting for operators and growth teams</title>
+    <meta
+      name="description"
+      content="{{ site.name }} helps service firms improve positioning, operating systems, analytics, and launch-ready digital experiences."
+    />
+    <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
-    <main class="page">
-      <h1>Client landing page</h1>
-    </main>
+  <body data-page="home">
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container nav-bar">
+          <a class="brand" href="index.html"><span class="brand-mark">CA</span><span>{{ site.name }}</span></a>
+          <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+          <nav class="site-nav" id="primary-nav">
+            <a class="nav-link" href="index.html">Home</a>
+            <a class="nav-link" href="about.html">About</a>
+            <a class="nav-link" href="services.html">Services</a>
+            <a class="nav-link" href="case-studies.html">Case Studies</a>
+            <a class="nav-link" href="pricing.html">Pricing</a>
+            <a class="nav-link" href="shop.html">Shop</a>
+            <a class="nav-link" href="subscriptions.html">Subscriptions</a>
+            <a class="nav-link" href="blogs.html">Blogs</a>
+            <a class="nav-link" href="contact.html">Contact</a>
+          </nav>
+          <div class="nav-actions">
+            <button class="cart-link" type="button" data-open-cart>
+              Cart (<span id="cart-count" data-cart-count>0</span>)
+            </button>
+            <a class="button button-primary" href="contact.html">Book a strategy call</a>
+          </div>
+        </div>
+      </header>
+      <main>
+        <section class="hero">
+          <div class="container hero-grid">
+            <div class="hero-copy">
+              <p class="eyebrow">Business consulting and digital transformation</p>
+              <h1>Build the client-facing website and the operating system behind it.</h1>
+              <p class="hero-text">
+                {{ site.name }} helps founder-led firms tighten positioning, modernize delivery, and launch sharper
+                web experiences without adding operational drag.
+              </p>
+              <div class="hero-actions">
+                <a class="button button-primary" href="services.html">Explore services</a>
+                <a class="button button-secondary" href="case-studies.html">See outcomes</a>
+              </div>
+            </div>
+            <div class="hero-panel stat-stack">
+              <article class="metric-card">
+                <strong>27%</strong>
+                <span>Average lift in qualified inbound pipeline after repositioning work.</span>
+              </article>
+              <article class="metric-card">
+                <strong>42%</strong>
+                <span>Reduction in handoff delays after workflow redesign and automation reviews.</span>
+              </article>
+              <article class="metric-card">
+                <strong>14 days</strong>
+                <span>Typical turnaround for Strategy Sprint diagnostic and rollout plan.</span>
+              </article>
+            </div>
+          </div>
+        </section>
+        <section class="section">
+          <div class="container">
+            <div class="section-heading">
+              <p class="eyebrow">How we help</p>
+              <h2>Consulting designed to strengthen both growth and delivery.</h2>
+            </div>
+            <div class="card-grid three-up">
+              <article class="content-card">
+                <p class="card-kicker">Positioning</p>
+                <h3>Sharper market story</h3>
+                <p>We clarify offers, proof points, and buyer messaging so your website and sales process stay aligned.</p>
+              </article>
+              <article class="content-card">
+                <p class="card-kicker">Operations</p>
+                <h3>Cleaner internal systems</h3>
+                <p>We map delivery workflows, automate friction points, and make execution easier for lean teams.</p>
+              </article>
+              <article class="content-card">
+                <p class="card-kicker">Analytics</p>
+                <h3>Decision-ready reporting</h3>
+                <p>We turn scattered data into clear scorecards so leaders can act quickly and coach from signal, not noise.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+        <section class="section surface">
+          <div class="container">
+            <div class="section-heading">
+              <p class="eyebrow">Our process</p>
+              <h2>From diagnostic to rollout, without bloated transformation theater.</h2>
+            </div>
+            <div class="process-grid">
+              <article class="process-step"><span>01</span><h3>Diagnose</h3><p>Audit offers, customer journey, delivery operations, and reporting gaps.</p></article>
+              <article class="process-step"><span>02</span><h3>Design</h3><p>Translate findings into a practical growth, systems, and website improvement roadmap.</p></article>
+              <article class="process-step"><span>03</span><h3>Deploy</h3><p>Support implementation with templates, guidance, and operating reviews your team can sustain.</p></article>
+            </div>
+          </div>
+        </section>
+        <section class="section">
+          <div class="container split-panel">
+            <div>
+              <p class="eyebrow">Featured case study</p>
+              <h2>Restructured a specialist advisory firm around clearer offers and faster delivery.</h2>
+              <p>
+                We tightened their positioning, simplified the website narrative, rebuilt reporting dashboards, and
+                trimmed manual project coordination across the team.
+              </p>
+              <ul class="feature-list">
+                <li>31% increase in discovery-call conversion</li>
+                <li>9 hours saved per week in delivery coordination</li>
+                <li>Leadership reporting moved from ad hoc to weekly cadence</li>
+              </ul>
+              <a class="button button-secondary" href="case-studies.html">Review case studies</a>
+            </div>
+            <div class="panel-card">
+              <p class="card-kicker">Sector</p>
+              <h3>B2B advisory</h3>
+              <p class="panel-callout">“The combination of message clarity and operating discipline changed how we sell and how we deliver.”</p>
+              <p class="fine-print">Managing Partner, retained advisory client</p>
+            </div>
+          </div>
+        </section>
+        <section class="section">
+          <div class="container">
+            <div class="section-heading">
+              <p class="eyebrow">Latest thinking</p>
+              <h2>Recent posts rendered from the platform’s blog data at publish time.</h2>
+            </div>
+            <div class="card-grid three-up">
+              {% for post in posts %}
+                <article class="content-card post-preview">
+                  <p class="card-kicker">{{ post.author }}</p>
+                  <h3>{{ post.title }}</h3>
+                  <p>{{ post.excerpt }}</p>
+                  <a class="text-link" href="blogs.html#{{ post.slug | url }}">Read the post</a>
+                </article>
+              {% endfor %}
+            </div>
+          </div>
+        </section>
+        <section class="section cta-section">
+          <div class="container cta-band">
+            <div>
+              <p class="eyebrow">Ready to modernize the commercial side of your firm?</p>
+              <h2>Let’s turn your website into a stronger growth channel and your delivery model into a calmer system.</h2>
+            </div>
+            <a class="button button-primary" href="contact.html">Start the conversation</a>
+          </div>
+        </section>
+      </main>
+      <footer class="site-footer">
+        <div class="container footer-grid">
+          <div>
+            <strong>{{ site.name }}</strong>
+            <p>Advisory for leadership teams upgrading messaging, systems, and digital presence.</p>
+          </div>
+          <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="services.html">Services</a>
+            <a href="case-studies.html">Case Studies</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="shop.html">Shop</a>
+            <a href="subscriptions.html">Subscriptions</a>
+            <a href="blogs.html">Blogs</a>
+            <a href="contact.html">Contact</a>
+          </div>
+        </div>
+      </footer>
+      <div class="cart-overlay" id="cart-overlay" hidden></div>
+      <aside class="cart-drawer" id="cart-drawer" aria-hidden="true">
+        <div class="cart-drawer__header">
+          <h2>Cart</h2>
+          <button type="button" id="cart-close">Close</button>
+        </div>
+        <p class="empty-state" id="cart-empty">Your cart is empty. Add a few sample offers from the shop page.</p>
+        <div id="cart-items" hidden></div>
+        <div class="cart-drawer__footer">
+          <div class="subtotal-row"><span>Subtotal</span><strong id="cart-subtotal">INR 0.00</strong></div>
+          <button class="button button-primary" type="button">Checkout placeholder</button>
+        </div>
+      </aside>
+    </div>
+    <script src="script.js" defer></script>
   </body>
 </html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blogs | Client landing page</title>
+    <meta name="description" content="Read practical insights from Client landing page on growth, systems, and advisory delivery." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="blogs">
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container nav-bar">
+          <a class="brand" href="index.html"><span class="brand-mark">CA</span><span>Client landing page</span></a>
+          <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+          <nav class="site-nav" id="primary-nav">
+            <a class="nav-link" href="index.html">Home</a>
+            <a class="nav-link" href="about.html">About</a>
+            <a class="nav-link" href="services.html">Services</a>
+            <a class="nav-link" href="case-studies.html">Case Studies</a>
+            <a class="nav-link" href="pricing.html">Pricing</a>
+            <a class="nav-link" href="shop.html">Shop</a>
+            <a class="nav-link" href="subscriptions.html">Subscriptions</a>
+            <a class="nav-link" href="blogs.html">Blogs</a>
+            <a class="nav-link" href="contact.html">Contact</a>
+          </nav>
+          <div class="nav-actions">
+            <button class="cart-link" type="button" data-open-cart>Cart (<span data-cart-count>0</span>)</button>
+            <a class="button button-primary" href="contact.html">Book a strategy call</a>
+          </div>
+        </div>
+      </header>
+      <main>
+        <section class="page-hero">
+          <div class="container narrow">
+            <p class="eyebrow">Blogs test page</p>
+            <h1>Publish-time rendered thought leadership for growth and operating teams.</h1>
+            <p class="page-intro">This page is built to verify blog post rendering while still looking like a credible consulting content hub.</p>
+          </div>
+        </section>
+        <section class="section">
+          <div class="container split-panel blog-layout">
+            <div>
+              <div class="blog-toolbar">
+                <input id="blog-search" type="search" placeholder="Search posts" />
+                <div class="tag-row">
+                  <span class="tag">Growth</span>
+                  <span class="tag">Strategy</span>
+                  <span class="tag">Operations</span>
+                  <span class="tag">Analytics</span>
+                </div>
+              </div>
+              <div class="post-grid" id="blog-grid">
+                
+                  <article class="post-card" data-title="How consulting teams scale delivery" data-author="Maya Rowe">
+                    <p class="card-kicker">Maya Rowe</p>
+                    <h3 id="how-consulting-teams-scale-delivery">How consulting teams scale delivery</h3>
+                    <p>A practical note on scaling delivery quality across growing client work.</p>
+                    <a class="text-link" href="blogs.html#how-consulting-teams-scale-delivery">Read more</a>
+                  </article>
+                
+                  <article class="post-card" data-title="Dashboards leaders actually use" data-author="Jordan Lee">
+                    <p class="card-kicker">Jordan Lee</p>
+                    <h3 id="dashboards-leaders-actually-use">Dashboards leaders actually use</h3>
+                    <p>Why operating dashboards should reduce friction instead of creating noise.</p>
+                    <a class="text-link" href="blogs.html#dashboards-leaders-actually-use">Read more</a>
+                  </article>
+                
+                  <article class="post-card" data-title="Positioning a consulting firm for the next stage" data-author="Ava Chen">
+                    <p class="card-kicker">Ava Chen</p>
+                    <h3 id="positioning-a-consulting-firm-for-the-next-stage">Positioning a consulting firm for the next stage</h3>
+                    <p>How mature firms refresh messaging without losing credibility with existing clients.</p>
+                    <a class="text-link" href="blogs.html#positioning-a-consulting-firm-for-the-next-stage">Read more</a>
+                  </article>
+                
+                  <article class="post-card" data-title="What automation should fix first" data-author="Maya Rowe">
+                    <p class="card-kicker">Maya Rowe</p>
+                    <h3 id="what-automation-should-fix-first">What automation should fix first</h3>
+                    <p>A practical order of operations for automating intake, delivery, and reporting.</p>
+                    <a class="text-link" href="blogs.html#what-automation-should-fix-first">Read more</a>
+                  </article>
+                
+                  <article class="post-card" data-title="Launching the new site" data-author="Ava Chen">
+                    <p class="card-kicker">Ava Chen</p>
+                    <h3 id="launching-the-new-site">Launching the new site</h3>
+                    <p>A short update on the new site rollout.</p>
+                    <a class="text-link" href="blogs.html#launching-the-new-site">Read more</a>
+                  </article>
+                
+              </div>
+              <div class="empty-state" id="blog-empty" hidden>No posts match that search yet.</div>
+            </div>
+            <aside class="panel-card">
+              <p class="card-kicker">Newsletter</p>
+              <h3>Get practical notes on positioning, systems, and advisory growth.</h3>
+              <form class="newsletter-form" id="newsletter-form">
+                <label>
+                  <span>Email address</span>
+                  <input type="email" name="email" placeholder="name@company.com" required />
+                </label>
+                <button class="button button-primary" type="submit">Join newsletter</button>
+                <p class="form-message" id="newsletter-message" hidden>Thanks. This is a demo signup and your request was captured locally.</p>
+              </form>
+            </aside>
+          </div>
+        </section>
+      </main>
+      <footer class="site-footer">
+        <div class="container footer-grid">
+          <div><strong>Client landing page</strong><p>Advisory insight for teams improving positioning, delivery, and leadership cadence.</p></div>
+          <div class="footer-links"><a href="index.html">Home</a><a href="about.html">About</a><a href="services.html">Services</a><a href="case-studies.html">Case Studies</a><a href="pricing.html">Pricing</a><a href="shop.html">Shop</a><a href="subscriptions.html">Subscriptions</a><a href="blogs.html">Blogs</a><a href="contact.html">Contact</a></div>
+        </div>
+      </footer>
+      <div class="cart-overlay" id="cart-overlay" hidden></div>
+      <aside class="cart-drawer" id="cart-drawer" aria-hidden="true">
+        <div class="cart-drawer__header"><h2>Cart</h2><button type="button" id="cart-close">Close</button></div>
+        <p class="empty-state" id="cart-empty">Your cart is empty. Add a few sample offers from the shop page.</p>
+        <div id="cart-items" hidden></div>
+        <div class="cart-drawer__footer"><div class="subtotal-row"><span>Subtotal</span><strong id="cart-subtotal">INR 0.00</strong></div><button class="button button-primary" type="button">Checkout placeholder</button></div>
+      </aside>
+    </div>
+    <script src="script.js" defer></script>
+  </body>
+</html>

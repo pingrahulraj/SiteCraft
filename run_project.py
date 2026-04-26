@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import shutil
 import json
 import os
 import platform
@@ -550,6 +551,26 @@ def default_html(name: str) -> str:
 """
 
 
+def sync_workspace_tree(conn, tenant_id: str, site_id: str, workspace: Path, published: Path) -> bool:
+    existing_files = [path for path in workspace.rglob("*") if path.is_file()]
+    if not existing_files:
+        return False
+    for path in existing_files:
+        relative = path.relative_to(workspace)
+        target = published / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, target)
+        sync_workspace_metadata(
+            conn,
+            tenant_id,
+            site_id,
+            relative.as_posix(),
+            relative.suffix.lstrip(".") or "txt",
+            path.stat().st_size,
+        )
+    return True
+
+
 def create_db() -> int:
     env = command_env()
     try:
@@ -690,15 +711,16 @@ def seed(conn, env: dict[str, str]) -> None:
     published = site_published_dir(tenant_id, site_id)
     workspace.mkdir(parents=True, exist_ok=True)
     published.mkdir(parents=True, exist_ok=True)
-    files = {
-        "index.html": default_html("Client landing page"),
-        "styles.css": "body { margin: 0; font-family: Arial, sans-serif; background: #f4f7fb; }\n.page { padding: 48px; }\n",
-        "app.js": "console.log('WebsiteBuilder ready');\n",
-    }
-    for name, content in files.items():
-        (workspace / name).write_text(content, encoding="utf-8")
-        (published / name).write_text(content, encoding="utf-8")
-        sync_workspace_metadata(conn, tenant_id, site_id, name, name.split(".")[-1], len(content.encode("utf-8")))
+    if not sync_workspace_tree(conn, tenant_id, site_id, workspace, published):
+        files = {
+            "index.html": default_html("Client landing page"),
+            "styles.css": "body { margin: 0; font-family: Arial, sans-serif; background: #f4f7fb; }\n.page { padding: 48px; }\n",
+            "app.js": "console.log('WebsiteBuilder ready');\n",
+        }
+        for name, content in files.items():
+            (workspace / name).write_text(content, encoding="utf-8")
+            (published / name).write_text(content, encoding="utf-8")
+            sync_workspace_metadata(conn, tenant_id, site_id, name, name.split(".")[-1], len(content.encode("utf-8")))
 
     with conn.cursor() as cur:
         cur.execute("select coalesce(max(release_number), 0) from site_releases where site_id = %s", (site_id,))
@@ -715,7 +737,7 @@ def seed(conn, env: dict[str, str]) -> None:
                 site_id,
                 release_number,
                 f"sites/{tenant_id}/{site_id}/published",
-                f"{delivery_base_url(env)}/sites/client-landing-page",
+                f"{delivery_base_url(env)}/sites/{site_id}/client-landing-page",
             ),
         )
         cur.execute(
@@ -764,11 +786,12 @@ def init() -> int:
                 print(message)
                 return 1
             migrate_conn(conn)
-            seed(conn, env)
-            failures = verify_seed(conn)
-            if failures:
-                append_log("api.log", "seed verification failed: " + "; ".join(failures))
-                return 1
+            if env_mode(env) in {"development", "dev"}:
+                seed(conn, env)
+                failures = verify_seed(conn)
+                if failures:
+                    append_log("api.log", "seed verification failed: " + "; ".join(failures))
+                    return 1
         append_log("api.log", "init completed successfully")
         return 0
     except Exception as exc:  # noqa: BLE001
@@ -860,7 +883,7 @@ def render(backend_proc: subprocess.Popen | None, frontend_proc: subprocess.Pope
     print("Services")
     print(f"  API          : {fmt_status(backend_proc)} -> http://localhost:{env.get('API_PORT', '8080')}/api")
     print(f"  Frontend     : {fmt_status(frontend_proc)} -> http://localhost:{env.get('FRONTEND_PORT', '5137')}")
-    print(f"  Delivery     : {fmt_status(backend_proc)} -> {delivery_base_url(env)}/sites/client-landing-page")
+    print(f"  Delivery     : {fmt_status(backend_proc)} -> {delivery_base_url(env)}/sites/{json.loads(SEED_FILE.read_text(encoding='utf-8')).get('siteId', 'site-id')}/client-landing-page" if SEED_FILE.exists() else f"  Delivery     : {fmt_status(backend_proc)} -> {delivery_base_url(env)}/sites/<site_id>/client-landing-page")
     print("")
     print("Commands")
     print("  q + Enter    : quit")
@@ -999,6 +1022,9 @@ def main() -> int:
             append_log("api.log", f"migrate failed: {exc}")
             return 1
     if args.command == "seed":
+        if env_mode(env) not in {"development", "dev"}:
+            print("seed is only allowed in development")
+            return 1
         try:
             with connect_db(env) as conn:
                 seed(conn, env)

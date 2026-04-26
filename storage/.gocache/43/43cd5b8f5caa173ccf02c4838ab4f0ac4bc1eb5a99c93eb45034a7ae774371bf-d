@@ -1,0 +1,8 @@
+./authz.go
+./config.go
+./password.go
+./platform.go
+./render_publish.go
+./server.go
+./site_files.go
+./store.go

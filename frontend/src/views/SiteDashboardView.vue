@@ -1200,7 +1200,7 @@ const sectionCards = computed(() => {
   }
   return map[activeSection.value] || map.overview
 })
-const liveUrl = computed(() => site.value?.previewUrl || site.value?.publicUrl || (site.value?.slug ? `http://localhost:8083/sites/${site.value.slug}` : ''))
+const liveUrl = computed(() => site.value?.publicUrl || site.value?.previewUrl || (site.value?.slug && site.value?.id ? `http://localhost:8083/sites/${site.value.id}/${site.value.slug}` : ''))
 const siteStatusLabel = computed(() => {
   const status = String(site.value?.status || 'draft').toLowerCase()
   return status === 'live' ? 'Live' : 'Draft'

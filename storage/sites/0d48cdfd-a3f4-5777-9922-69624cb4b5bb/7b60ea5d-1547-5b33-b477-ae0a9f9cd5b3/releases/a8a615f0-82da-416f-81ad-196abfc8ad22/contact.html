@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact | Client Advisory Studio</title>
+    <meta name="description" content="Contact page for the consulting demo." />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container nav-row">
+          <a class="brand" href="index.html"><span class="brand-mark"></span><span>Client Advisory Studio</span></a>
+          <nav class="site-nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="services.html">Services</a><a href="case-studies.html">Case Studies</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact</a></nav>
+        </div>
+      </header>
+      <main><section class="page-hero"><div class="container"><p class="eyebrow">Contact</p><h1>Test form UI, JS success handling, and responsive layout.</h1></div></section><section class="section"><div class="container two-column"><article class="contact-card"><h3>Start a conversation</h3><form class="contact-form" data-demo-form><input type="text" placeholder="Name" required /><input type="email" placeholder="Email" required /><input type="text" placeholder="Company" /><textarea placeholder="What are you trying to improve?"></textarea><button class="primary-button" type="submit">Send request</button><p class="success-message" data-form-success hidden>Thanks. This is a frontend-only success state for platform testing.</p></form></article><article class="card"><h3>Contact details</h3><p>hello@clientadvisorystudio.test</p><p>Bangalore, India</p><p class="quote">Use this page to test save, preview, publish, and live form styling.</p></article></div></section></main>
+      <footer class="site-footer">
+        <div class="container footer-grid">
+          <div><strong>Client Advisory Studio</strong><p>Professional demo website built to test editing, preview, publish, and delivery flows in SiteCraft.</p></div>
+          <div><p>Developer-first HTML workspace. Responsive layout. Frontend-only interactions where needed.</p></div>
+        </div>
+      </footer>
+    </div>
+    <aside class="cart-drawer" data-cart-drawer hidden>
+      <div class="cart-head"><h2>Cart</h2><button type="button" class="mini-ghost" data-cart-close>Close</button></div>
+      <div class="cart-items" data-cart-items></div>
+      <div class="cart-empty" data-cart-empty>Your cart is empty.</div>
+      <div class="cart-footer"><div class="subtotal-row"><span>Subtotal</span><strong data-cart-subtotal>INR 0.00</strong></div><button type="button" class="primary-button" data-fake-checkout>Checkout</button></div>
+    </aside>
+  </body>
+</html>

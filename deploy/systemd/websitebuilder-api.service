@@ -1,0 +1,19 @@
+[Unit]
+Description=SiteCraft API service
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=sitecraft
+Group=sitecraft
+WorkingDirectory=/opt/sitecraft/backend
+EnvironmentFile=/etc/sitecraft/sitecraft.env
+ExecStart=/opt/sitecraft/bin/sitecraft-api
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
