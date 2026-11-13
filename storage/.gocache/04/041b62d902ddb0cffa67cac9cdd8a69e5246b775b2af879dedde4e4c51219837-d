@@ -1,7 +1,0 @@
-./authz.go
-./config.go
-./password.go
-./platform.go
-./server.go
-./site_files.go
-./store.go

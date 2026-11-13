@@ -1,5 +1,0 @@
-=== RUN   TestRunnerCommand
-{"blog_posts":true,"products":true,"site_releases":true,"sites":true,"snapshot":{"defaultCredentials":{"email":"ava@acme-studio.com","password":"Welcome123!","tenantSlug":"acme-studio"},"sites":0,"tenants":0,"users":0},"subscription_plans":true,"tenant_users":true,"tenants":true,"users":true,"workspace_files":true}
---- PASS: TestRunnerCommand (0.03s)
-PASS
-ok  	sitecraft/backend/internal/app	0.278s

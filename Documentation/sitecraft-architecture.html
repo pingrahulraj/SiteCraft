@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SiteCraft Architecture Decision Record</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--fg:#1c1e21;--mut:#606770;--bd:#dadde1;--side:#f7f8fa;--pri:#1d4ed8;--priL:#eef3ff;--ok:#0f7a3d;--warn:#b45309;--bad:#b91c1c;--code:#f3f4f6}
+:root[data-theme=dark]{--bg:#16181d;--fg:#e6e8eb;--mut:#9aa1ab;--bd:#2c3038;--side:#1b1e24;--pri:#7aa2ff;--priL:#1f2a44;--ok:#4ade80;--warn:#fbbf24;--bad:#f87171;--code:#23272e}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 'IBM Plex Sans',system-ui,sans-serif}
+header{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:16px;padding:0 20px;z-index:10}
+header b{font-weight:600;font-size:17px}header .sp{flex:1}
+header span.v{color:var(--mut);font-size:13px}
+button{background:none;border:1px solid var(--bd);color:var(--fg);padding:5px 10px;font:inherit;cursor:pointer}
+#menu{display:none}
+nav#side{position:fixed;top:56px;bottom:0;left:0;width:280px;overflow:auto;background:var(--side);border-right:1px solid var(--bd);padding:12px 0}
+nav#side input{margin:4px 14px 10px;width:calc(100% - 28px);padding:6px 8px;border:1px solid var(--bd);background:var(--bg);color:var(--fg);font:inherit}
+nav#side a{display:block;padding:5px 16px;color:var(--fg);text-decoration:none;font-size:14px;border-left:3px solid transparent}
+nav#side a:hover{background:var(--priL)}nav#side a.on{color:var(--pri);border-left-color:var(--pri);background:var(--priL);font-weight:500}
+main{margin:56px 240px 0 280px;padding:32px 48px 80px;max-width:1100px}
+aside#toc{position:fixed;top:56px;right:0;width:240px;padding:32px 16px;font-size:13px;overflow:auto;bottom:0}
+aside#toc a{display:block;color:var(--mut);text-decoration:none;padding:2px 0}aside#toc a:hover{color:var(--pri)}
+h1{font-size:34px;margin:0 0 8px;letter-spacing:-.5px}
+h2{font-size:25px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--bd)}h3{font-size:17px;margin:24px 0 8px}
+table{border-collapse:collapse;width:100%;margin:12px 0 18px;font-size:13.5px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--bd);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--side);font-weight:600;white-space:nowrap}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+code,pre{font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:var(--code)}code{padding:1px 5px}
+pre{padding:12px 14px;overflow:auto;border:1px solid var(--bd);line-height:1.45}pre code{padding:0;background:none}
+.t{font:600 11px/1'IBM Plex Mono',monospace;padding:2px 5px;margin-right:4px;color:#fff;vertical-align:1px;white-space:nowrap}
+.F{background:#0f7a3d}.A{background:#b45309}.C{background:#6d28d9}.R{background:#1d4ed8}
+.box{border-left:4px solid var(--pri);background:var(--priL);padding:10px 16px;margin:14px 0}
+.box.bad{border-color:var(--bad);background:rgba(185,28,28,.08)}.box.ok{border-color:var(--ok);background:rgba(15,122,61,.08)}
+.g{color:var(--ok);font-weight:600}.r{color:var(--bad);font-weight:600}.y{color:var(--warn);font-weight:600}
+ul{padding-left:20px}li{margin:3px 0}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.cols>div{border:1px solid var(--bd);padding:4px 14px}
+@media(max-width:1100px){aside#toc{display:none}main{margin-right:0}}
+@media(max-width:800px){nav#side{transform:translateX(-100%);transition:.2s;z-index:9}nav#side.open{transform:none}main{margin-left:0;padding:24px 16px}#menu{display:block}.cols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><button id="menu" aria-label="Menu">☰</button><b>SiteCraft Docs</b><span class="v">Architecture · v1.0 · 2026-11-14</span><span class="sp"></span><button id="th">Theme</button></header>
+<nav id="side"><input id="q" placeholder="Filter sections…" aria-label="Filter"></nav>
+<aside id="toc"></aside>
+<main>
+<h1>SiteCraft Architecture Decision Record</h1>
+<p>Build anywhere → connect → preview → pay → publish. Foundation document for V1. Written for: founder + implementing coding agents.</p>
+<p><span class="t F">FACT</span>sourced / verified &nbsp; <span class="t A">ASSUMPTION</span>input I chose, replace with your data &nbsp; <span class="t C">CALCULATION</span>derived from stated inputs &nbsp; <span class="t R">RECOMMENDATION</span>decision</p>
+<div class="box bad"><b>Verification status.</b> Only the CloudFront tenant pricing and flat-rate/multi-tenant incompatibility were checked live (web search, not the official pricing page itself). All other AWS unit prices are from memory and tagged ASSUMPTION. Re-check them in the AWS Pricing Calculator before committing to pricing. No test, load run or deployment was executed.</div>
+
+<div class="box ok"><b>v1.1:</b> sections 18–28 and ADR-002 move the edge and file storage to Cloudflare, which cuts CDN cost ≈95%. Where they conflict with §3–§9, §18+ wins; §3–§9 remain the fallback design.</div>
+<h2>1. Executive verdict</h2>
+<table><tr><th>Question</th><th>Verdict</th></tr>
+<tr><td>Is serverless static-first on AWS viable?</td><td><span class="t R">RECOMMENDATION</span><span class="g">Yes.</span> Idle cost ≈ ₹1.1k/month. Compute, DB and API are near-zero per site. <b>CloudFront egress is the only large cost</b> (≈₹10.4 per GB all-in).</td></tr>
+<tr><td>Is it viable uncapped?</td><td><span class="t C">CALCULATION</span><span class="r">No.</span> Mixed traffic with no caps costs ≈ ₹182/site/month, above a ₹99 price. The top 3% of sites generate ~78% of CDN cost. Bandwidth caps are a product requirement.</td></tr>
+<tr><td>Permanent free public hosting?</td><td><span class="t R">RECOMMENDATION</span><span class="r">No.</span> Free = LOCAL + DRAFT + 7-day PREVIEW. Published sites require an active entitlement. Free hosting also attracts phishing, which puts the AWS account at risk.</td></tr>
+<tr><td>Pricing</td><td><span class="t R">RECOMMENDATION</span>Launch <b>₹99 Starter (5 GB)</b> and <b>₹199 Pro (12 GB)</b>. ₹49 Lite only as subdomain-only, 2 GB, annual prepay. Overage ₹15/GB with a spend ceiling.</td></tr>
+<tr><td>Margin at scale</td><td><span class="t C">CALCULATION</span>Blended gross margin: 45% @100 sites, 62% @1k, 72% @10k, 73% @100k (₹99 plan, before support, CAC, tax).</td></tr>
+<tr><td>Architecture changes from your hypothesis</td><td><span class="t R">RECOMMENDATION</span>Publish = materialise files to <code>live/{tenant}/</code> via server-side S3 copy (no edge KV lookup). Custom domains gated to paid plans (₹9/domain tenant fee). Separate user-content domain and AWS account boundary. Everything else holds.</td></tr></table>
+
+<h2>2. Critical flaws and failure modes</h2>
+<p>Items 1–8 change the design. 9–20 are things the brief did not mention.</p>
+<table><tr><th>#</th><th>Problem</th><th>Impact</th><th>Fix</th></tr>
+<tr><td>1</td><td><span class="t C">CALC</span>Egress dominates COGS (₹9/GB + requests). A single viral site (2.4 TB) ≈ ₹24.8k = 250 customers' monthly revenue.</td><td class="r">Loss</td><td>Plan caps, overage with spend ceiling, auto-suspend page. See §6.</td></tr>
+<tr><td>2</td><td><span class="t F">FACT</span>CloudFront flat-rate plans do <b>not</b> support multi-tenant distributions.</td><td>Cannot cap CDN bill via flat-rate.</td><td>Pay-as-you-go + own metering.</td></tr>
+<tr><td>3</td><td><span class="t F">FACT</span>SaaS Manager tenants: first 10 free, 11–200 flat $20/mo, then $0.10/tenant/mo. <span class="t A">ASSUMPTION</span>I read "above 200" as $0.10 per tenant for the tenants beyond 200, on top of the $20.</td><td>≈₹9 per custom domain at scale.</td><td>Custom domains only on paid plans, capped per plan. Verify against the official pricing page.</td></tr>
+<tr><td>4</td><td><span class="t F">FACT</span>CloudFront cannot cut a tenant off in real time. Metering from logs lags (assume ≤ 1–2 h).</td><td>A flood can overshoot caps before suspension.</td><td>Obscure preview URLs, WAF rate rule on preview, hourly suspension job, global daily spend breaker.</td></tr>
+<tr><td>5</td><td><span class="t A">ASSUMPTION</span>CloudFront KeyValueStore has a ~5 MB total limit (verify). 100k hosts would not fit.</td><td>Routing breaks at scale.</td><td>Do not use KVS for routing. Route by host-derived prefix and per-tenant origin path (§3).</td></tr>
+<tr><td>6</td><td>User sites on the same domain as the app.</td><td>XSS/cookie theft, phishing reputation hits the app domain.</td><td><span class="t R">REC</span>Separate registrable domain for user content (e.g. <code>*.sitecraft.site</code>), submit to the Public Suffix List. Never share cookies.</td></tr>
+<tr><td>7</td><td>AWS Acceptable Use: phishing/malware on your account.</td><td>Whole-account suspension = all customers down.</td><td>Separate AWS accounts for control plane and customer content. Abuse intake + 1-click takedown, Safe Browsing check at publish.</td></tr>
+<tr><td>8</td><td>C++ + AWS SDK: slow builds, large binaries, small talent pool.</td><td>Velocity and hiring risk.</td><td>Build only needed SDK components, Docker build, keep Lambda a thin routed monolith (§12).</td></tr>
+<tr><td>9</td><td>Razorpay/UPI AutoPay failures, chargebacks, GST invoicing.</td><td>Paid-state drift, compliance.</td><td>Webhook-driven entitlement state machine with grace period (§10). GST invoice per payment.</td></tr>
+<tr><td>10</td><td>Customer DNS errors (apex CNAME, propagation, wrong records).</td><td>Support load is the real cost of domains.</td><td>DNS checker in <code>connect_domain</code>, guided records, only ALIAS/A-record help text for apex.</td></tr>
+<tr><td>11</td><td>S3 versioning/old releases accumulate.</td><td>Hidden storage growth.</td><td>Content-addressed blobs, keep last N=5 releases, lifecycle deletes the rest.</td></tr>
+<tr><td>12</td><td>CloudWatch logs from chatty Lambda.</td><td>$0.50/GB ingest surprises.</td><td>Log level WARN in prod, 14-day retention, sample INFO 1%.</td></tr>
+<tr><td>13</td><td>AI agent retry loops on <code>write_files</code>.</td><td>API + DDB + S3 PUT cost, DoS on yourself.</td><td>Idempotency keys, hash-diff, per-token rate and daily write quota.</td></tr>
+<tr><td>14</td><td>Account/billing blast radius: no spend alarm in time.</td><td>Surprise ₹ bill.</td><td>Budgets at 3 thresholds + Cost Anomaly Detection + budget action (§13).</td></tr>
+<tr><td>15</td><td>India DPDP Act, IT Rules takedown duties, ToS/DMCA agent.</td><td>Legal exposure.</td><td>ToS, AUP, abuse@ mailbox, 24-hour takedown SLA, data processing record. Get legal review before launch.</td></tr>
+<tr><td>16</td><td>AWS CloudFront DDoS: Shield Standard is free but bandwidth is still billed.</td><td>Attack = bill.</td><td>WAF rate rules on preview and API only. Accept residual risk on paid sites, covered by overage ceiling.</td></tr>
+<tr><td>17</td><td>No backups/DR for DynamoDB metadata.</td><td>Data loss.</td><td>Enable PITR on 2 tables (≈ +20% DDB storage cost, negligible).</td></tr>
+<tr><td>18</td><td>USD COGS vs INR price.</td><td>-2.6 pt GM per +10% USD (§7).</td><td>Annual price review clause, hold 60%+ GM target.</td></tr>
+<tr><td>19</td><td>Support cost not modelled (the largest hidden cost at ₹99).</td><td>Can erase margin.</td><td>Self-serve docs, email-only support, domain wizard, no phone.</td></tr>
+<tr><td>20</td><td>Account farming of previews with disposable emails.</td><td>≈₹11 worst case each (§5).</td><td>Verified email + phone OTP to unlock 2nd preview, IP/device limits, global preview budget breaker.</td></tr></table>
+
+<h2>3. Recommended V1 architecture</h2>
+<table><tr><th>Layer</th><th>Choice</th><th>Why / change from hypothesis</th></tr>
+<tr><td>Dashboard</td><td>Vue 3 SPA on S3 + CloudFront (own distribution, app domain)</td><td>Kept.</td></tr>
+<tr><td>Edge for sites</td><td>One CloudFront multi-tenant distribution (SaaS Manager) for customer domains + one wildcard distribution for <code>*.sitecraft.site</code> + one preview distribution</td><td>Changed: preview isolated so its WAF/budget/kill-switch cannot affect paid traffic.</td></tr>
+<tr><td>Routing</td><td>Wildcard: CloudFront Function maps <code>{slug}.sitecraft.site/path</code> → <code>/live/{slug}/path</code> and handles clean URLs/<code>index.html</code>. Custom domain: tenant parameter sets origin path <code>/live/{tenant}</code>.</td><td>Changed: no KeyValueStore dependency.</td></tr>
+<tr><td>Publish</td><td>Files uploaded once as content-addressed blobs <code>blobs/{sha256}</code>. Publish/rollback = manifest write + server-side <code>CopyObject</code> into <code>live/{tenant}/</code> (≈$5 per M copies, ≈₹0.02 per 50-file publish).</td><td>Changed: rollback is metadata + copy, no re-upload. Dedupes across versions and tenants.</td></tr>
+<tr><td>Cache</td><td>HTML TTL 60 s, hashed assets 1 year. <b>No invalidations.</b></td><td>Changed: publish goes live ≤ ~60 s without invalidation fees.</td></tr>
+<tr><td>API</td><td>API Gateway HTTP API → one C++ Lambda (routed monolith, provided.al2023)</td><td>Kept. Function URL would save ≈$1/M calls but lose throttling/WAF/JWT authorizer. At 100k sites ≈ $10/mo, not worth it.</td></tr>
+<tr><td>Auth</td><td>Cognito (Google + email OTP) + JWT authorizer for humans; hashed <code>sc_</code> personal access tokens in DynamoDB for CLI/MCP</td><td>Added: CLI/agents need long-lived scoped tokens. Verify Cognito free tier before launch.</td></tr>
+<tr><td>Data</td><td>DynamoDB on-demand, single table + PITR. S3 buckets: <code>blobs</code>, <code>live</code>, <code>preview</code>, <code>logs</code>, <code>app</code>.</td><td>Kept.</td></tr>
+<tr><td>Metering</td><td>API counters: DDB atomic ADD. CDN: CloudFront standard logs → S3 (Parquet) → hourly Athena/Lambda aggregation → tenant counters → enforcement job.</td><td>Added. Log-processing ≈ $5–30/mo at 100k sites (<span class="t A">ASSUMPTION</span>).</td></tr>
+<tr><td>Jobs</td><td>EventBridge Scheduler → same Lambda (hourly meter, daily expiry sweep). S3 lifecycle does bulk deletion.</td><td>Added. No Step Functions in V1.</td></tr>
+<tr><td>Payments</td><td>Razorpay subscriptions, webhooks to Lambda</td><td><span class="t A">ASSUMPTION</span>India-first. Stripe later if USD sales.</td></tr></table>
+
+<h2>4. Architecture diagram</h2>
+<pre><code>  Human / AI agent / CLI / MCP
+            │  (PAT or Cognito JWT, never AWS creds)
+            ▼
+   ┌─ app.sitecraft.com ─────────────┐        ┌─ CloudFront: dashboard ─ S3(app) ─┐
+   │  Vue SPA                         │───────▶│                                   │
+   └──────────────────────────────────┘        └───────────────────────────────────┘
+            │ HTTPS
+            ▼
+   API Gateway HTTP API ── WAF (rate rules) ──▶ Lambda (C++ monolith)
+                                                │ pipeline per call:
+                                                │ authN → authZ → quota → validate → audit → execute
+                          ┌─────────────────────┼───────────────────────┐
+                          ▼                     ▼                       ▼
+                    DynamoDB (single-table)   S3 blobs/ (sha256)     Razorpay webhooks
+                    tenants, sites, releases, └─ CopyObject ─▶ S3 live/{tenant}/…  S3 preview/{id}/… (7-day lifecycle)
+                    usage, audit, entitlements                     ▲                    ▲
+                                                                   │ origin (OAC)       │
+   Visitors ──▶ CF multi-tenant (custom domains, origin path /live/{tenant})            │
+   Visitors ──▶ CF wildcard *.sitecraft.site  (CF Function: host→/live/{slug})  ────────┘
+   Visitors ──▶ CF preview  *.preview.sitecraft.site (WAF rate rule, noindex header)
+
+   CF standard logs ▶ S3 logs (30-day lifecycle) ▶ hourly Athena/Lambda ▶ DDB usage counters
+                                                       └▶ over-cap? ▶ swap live/{tenant}/ with 'limit reached' page
+   AWS Budgets + Anomaly Detection ▶ SNS ▶ email; budget action ▶ deny-policy on deploy role</code></pre>
+
+<h2>5. Free / Draft / Preview / Paid model</h2>
+<table><tr><th>State</th><th>Where</th><th>Limits (hard)</th><th>Expiry / behaviour</th><th>Max cost / account / mo</th></tr>
+<tr><td><b>LOCAL</b></td><td>User machine/browser. CLI keeps a local manifest.</td><td>None server-side</td><td>—</td><td class="n">₹0</td></tr>
+<tr><td><b>DRAFT</b></td><td>Private, S3 blobs + DDB manifest</td><td>25 MB total, 200 files, 5 MB/file, 3 drafts, 30 writes/min</td><td>Inactive 30 days → warn email; +14 days → delete (lifecycle)</td><td class="n">₹0.06 <span class="t C">C</span></td></tr>
+<tr><td><b>PREVIEW</b></td><td>Random URL on preview distribution, <code>X-Robots-Tag: noindex</code>, banner</td><td>2 active previews, 25 MB each, 300 MB transfer each, 1 GB account/month, 10k req, no custom domain, no forms/dynamic</td><td>7 days, extend ×2 if viewed. Then objects deleted. Over cap → cached 429-page.</td><td class="n">≈₹11 <span class="t C">C</span></td></tr>
+<tr><td><b>PUBLISHED</b></td><td>live/ prefix, normal CDN, domains/SSL</td><td>Per plan (§8)</td><td>See entitlement states below</td><td>Paid by customer</td></tr></table>
+<p><span class="t C">CALCULATION</span>Preview worst case: 1 GB × ₹10.4 + 50 MB storage ₹0.11 ≈ ₹11. Typical (5% of cap) ≈ ₹0.6. 10,000 farmed accounts at full cap = ₹110k, hence the global preview budget breaker: <b>₹2,000/day</b> at launch (<span class="t A">ASSUMPTION</span>), after which new previews are paused and existing ones throttled.</p>
+<h3>Entitlement state machine</h3>
+<table><tr><th>State</th><th>Trigger</th><th>Site behaviour</th></tr>
+<tr><td>ACTIVE</td><td>Paid</td><td>Live</td></tr>
+<tr><td>GRACE</td><td>Payment failed</td><td>Live 7 days, email day 0/3/6. Custom domain still works.</td></tr>
+<tr><td>SUSPENDED</td><td>Grace ended, over hard cap, or abuse hold</td><td><code>live/</code> swapped for a static page (≤ ~60 s via TTL). Files kept 60 days.</td></tr>
+<tr><td>ARCHIVED</td><td>60 days suspended</td><td><code>live/</code> deleted, blobs kept 30 more days, then purged. Domain tenant removed (stops the ₹9 fee).</td></tr></table>
+<div class="box"><b>Permanent free plan.</b> <span class="t R">RECOMMENDATION</span>Not at launch. Even an idle published free site costs ≈₹1.2 (class A below); each paying customer contributes ≈₹73. If revisited, require ≤ 100 MB, ≤ 1 GB/month, SiteCraft badge, subdomain only, 90-day inactivity archive, and a measured preview→paid conversion that covers it. Worst-case free cost ≈ ₹11 means ≥ 1 paid per 7 free if every free site maxes out; at 5% typical use ≈ 60 free per paid.</div>
+
+<h2>6. Cost-control architecture</h2>
+<table><tr><th>Mechanism</th><th>Saves</th></tr>
+<tr><td>Local/browser editing; SiteCraft stores nothing until <code>preview</code> or <code>deploy</code></td><td>Draft storage, API calls</td></tr>
+<tr><td>Content hashing: <code>write_files</code> sends hashes first, server returns missing hashes only</td><td>Repeat uploads, PUTs, bandwidth</td></tr>
+<tr><td>Batch API (≤ 200 files/call), idempotency keys</td><td>API calls, agent loops</td></tr>
+<tr><td>No server-side build in V1 (static HTML/CSS/JS only)</td><td>Build compute, queues, runners</td></tr>
+<tr><td>Publish-time optimisation: Brotli, image size warnings/limit, minify optional. Reject files &gt; 5 MB (25 MB paid video-free)</td><td>Egress (largest cost)</td></tr>
+<tr><td>File-type allowlist (html, css, js, json, txt, xml, svg, images, fonts, webp/avif, pdf ≤ 5 MB). Block video/audio/zip/exe</td><td>Movie hosting, malware</td></tr>
+<tr><td>Preview expiry via S3 lifecycle (prefix-scoped, 7-8 days) + draft sweep job</td><td>Abandoned storage</td></tr>
+<tr><td>Lifecycle: blobs unreferenced &gt; 30 days, old releases beyond N=5, logs 30 days, abort incomplete uploads 1 day</td><td>Storage</td></tr>
+<tr><td>CloudWatch: WARN-only, 14-day retention, no per-request logging in Lambda; CloudFront logs to S3 only</td><td>Log ingest ($0.50/GB)</td></tr>
+<tr><td>Cache: HTML 60 s, assets immutable, <code>s-maxage</code>; <b>no invalidation fees</b></td><td>Invalidation + origin requests</td></tr>
+<tr><td>Rate limits at three levels: WAF (IP), API GW throttle (route), app quota (tenant token)</td><td>Bots, abuse</td></tr>
+<tr><td>Hourly enforcement job: usage vs caps → warn 80%, overage tracking 100%, suspend page at ceiling</td><td>Viral spikes</td></tr>
+<tr><td>Global breakers: daily ₹ budget on preview; AWS Budgets action attaches deny policy to deploy role on breach</td><td>Account-farming and runaway bills</td></tr>
+<tr><td>Preview URLs unguessable (128-bit), no sitemap, no directory</td><td>Bot traffic on free tier</td></tr>
+<tr><td>Single Region (ap-south-1 for data), CloudFront PriceClass_All only if global audience needed. <span class="t A">ASSUMPTION</span>India-heavy start</td><td>Egress rate</td></tr>
+<tr><td>CloudFront Security Savings Bundle (committed spend) once CDN spend is steady</td><td>Up to ≈30% of CDN <span class="t A">ASSUMPTION</span></td></tr></table>
+<h3>Metering counters (DynamoDB, per tenant per month)</h3>
+<table><tr><th>Counter</th><th>Source</th><th>Soft warning</th><th>Hard quota</th><th>Paid overage</th></tr>
+<tr><td>stored_bytes</td><td>API (on commit)</td><td>80%</td><td>100% blocks new writes</td><td>₹3/GB-mo (add-on)</td></tr>
+<tr><td>cdn_bytes</td><td>CF logs hourly</td><td>80%</td><td>3× included → suspend page unless spend-limit raised</td><td>₹15/GB</td></tr>
+<tr><td>requests</td><td>CF logs</td><td>80%</td><td>Plan cap (e.g. 500k/mo Starter)</td><td>₹30/M</td></tr>
+<tr><td>api_calls</td><td>Lambda</td><td>80%</td><td>Per-token 60/min, 5k/day</td><td>None (rate limit only)</td></tr>
+<tr><td>writes (files)</td><td>Lambda</td><td>80%</td><td>2,000 files/day</td><td>None</td></tr>
+<tr><td>preview_bytes / preview_count</td><td>CF logs / API</td><td>80%</td><td>§5 limits</td><td>None (upgrade to publish)</td></tr>
+<tr><td>deployments</td><td>Lambda</td><td>—</td><td>30/day, 300/month</td><td>None</td></tr>
+<tr><td>ai_tokens / ai_calls</td><td>Future AI module</td><td>80%</td><td>Prepaid credits only</td><td>Credit packs</td></tr>
+<tr><td>commerce_gmv / orders</td><td>Future Commerce module</td><td>—</td><td>—</td><td>Percentage fee (module)</td></tr></table>
+<p><span class="t R">RECOMMENDATION</span>Counter key: <code>PK=T#{tenant} SK=U#{yyyymm}</code>, plus daily buckets <code>U#{yyyymmdd}</code> for rate-like caps with TTL. Every metered event carries <code>tenant_id, meter, qty, ts, idem_key</code> so Commerce/AI can reuse the same ledger later.</p>
+
+<h2>7. Mathematical unit economics</h2>
+<h3>Inputs</h3>
+<table><tr><th>Input</th><th>Value</th><th>Tag</th></tr>
+<tr><td>FX</td><td>₹90 / USD</td><td><span class="t A">A</span></td></tr>
+<tr><td>CloudFront egress, blended</td><td>$0.10/GB = ₹9/GB (India ≈ $0.109, US ≈ $0.085)</td><td><span class="t A">A</span></td></tr>
+<tr><td>CloudFront requests</td><td>$1/M = ₹90/M. CF Function adds $0.10/M (≈ +1.5% of all-in)</td><td><span class="t A">A</span></td></tr>
+<tr><td>Page weight / requests</td><td>0.8 MB per view, 12 requests per view → 1 GB ≈ 15k requests</td><td><span class="t A">A</span></td></tr>
+<tr><td><b>All-in CDN cost</b></td><td>₹9 + 15k × ₹0.00009 = <b>₹10.35/GB</b></td><td><span class="t C">C</span></td></tr>
+<tr><td>S3</td><td>$0.025/GB-mo = ₹2.25/GB-mo</td><td><span class="t A">A</span></td></tr>
+<tr><td>Lambda + API GW + DDB + logs + S3 requests</td><td>₹0.3 – ₹2 per site by class (₹1.5 blended)</td><td><span class="t A">A</span></td></tr>
+<tr><td>Custom-domain tenant fee</td><td>₹9/domain/mo above 200 tenants (50% of sites use a domain)</td><td><span class="t F">F</span>/<span class="t A">A</span></td></tr>
+<tr><td>Payment processing</td><td>2% + 18% GST on fee = 2.36%, modelled 2.5% of net price. Prices are ex-GST; GST is pass-through.</td><td><span class="t A">A</span></td></tr></table>
+<h3>User classes (per site per month)</h3>
+<table><tr><th>Class</th><th>Mix (paid)</th><th>Views</th><th>GB</th><th>Requests</th><th>Storage</th><th>CDN ₹</th><th>Total COGS ₹ (no domain)</th></tr>
+<tr><td>A almost-zero</td><td class="n">30%</td><td class="n">100</td><td class="n">0.08</td><td class="n">1.2k</td><td class="n">20 MB</td><td class="n">0.83</td><td class="n">1.2</td></tr>
+<tr><td>B normal local business</td><td class="n">55%</td><td class="n">2,000</td><td class="n">1.6</td><td class="n">24k</td><td class="n">50 MB</td><td class="n">16.6</td><td class="n">17.7</td></tr>
+<tr><td>C medium</td><td class="n">12%</td><td class="n">30,000</td><td class="n">24</td><td class="n">360k</td><td class="n">150 MB</td><td class="n">248</td><td class="r n">250</td></tr>
+<tr><td>D high</td><td class="n">2.7%</td><td class="n">300k</td><td class="n">240</td><td class="n">3.6M</td><td class="n">500 MB</td><td class="n">2,484</td><td class="r n">2,487</td></tr>
+<tr><td>E viral outlier</td><td class="n">0.3%</td><td class="n">3M</td><td class="n">2,400</td><td class="n">36M</td><td class="n">1 GB</td><td class="n">24,840</td><td class="r n">24,845</td></tr>
+<tr><td colspan="7"><b>Blended, uncapped</b> = 0.3×1.2 + 0.55×17.7 + 0.12×250 + 0.027×2,487 + 0.003×24,845</td><td class="r n">≈ ₹182</td></tr></table>
+<p><span class="t C">CALCULATION</span>Class B alone: ₹17.7 + ₹2.5 payment (₹99 plan) ≈ ₹20: the ₹5–20 target holds <b>only for normal, subdomain-only sites</b>. A custom domain adds ₹9. Classes mix inputs are <span class="t A">ASSUMPTIONS</span>. Replace them with measured data after 50 customers.</p>
+<h3>Break-even and sustainable bandwidth per plan</h3>
+<p>Formula: GB<sub>max</sub> = (price × (1 − GM<sub>target</sub> − 0.025) − ₹2 platform − ₹9 × domains) ÷ ₹10.35.</p>
+<table><tr><th>Plan (ex-GST)</th><th>Domains</th><th>Break-even GB (0% GM)</th><th>GB at 20% GM</th><th>GB at 60% GM</th><th>Included GB (proposed)</th><th>GM if every customer uses full cap</th><th>GM blended (capped mix)</th></tr>
+<tr><td>₹49 Lite</td><td class="n">0</td><td class="n">4.4</td><td class="n">3.5</td><td class="n">1.6</td><td class="n"><b>2</b></td><td class="n">51%</td><td class="n">69%</td></tr>
+<tr><td>₹99 Starter</td><td class="n">1</td><td class="n">8.3</td><td class="n">6.3</td><td class="n">2.5</td><td class="n"><b>5</b></td><td class="n">34%</td><td class="n">74%</td></tr>
+<tr><td>₹199 Pro</td><td class="n">2</td><td class="n">16.8</td><td class="n">12.9</td><td class="n">5.2*</td><td class="n"><b>12</b></td><td class="n">25%</td><td class="n">78%</td></tr></table>
+<p style="font-size:13px">*at 60% GM with 2 domains: (199×0.375 − 2 − 18)/10.35 = 5.2 GB. Starter blended: cap 5 GB → mean 1.65 GB → ₹17.1 CDN + ₹1.5 + ₹2.5 + ₹4.5 domain = ₹25.6 → GM 74%. Lite blended (cap 2): 1.2 GB. Pro blended: mean 2.7 GB. Margins exclude support, CAC, tax.</p>
+<h3>Minimum profitable price</h3>
+<p><span class="t C">CALCULATION</span>For a class-B site with a domain (1.6 GB): COGS ≈ ₹29 + payment → minimum price at 60% GM ≈ ₹75. At ₹49, a domain-free class-B site gives GM ≈ 58%. <b>₹49 is viable only because of the 2 GB cap and no domain;</b> it has no room for support. <span class="t R">RECOMMENDATION</span>Do not headline ₹49. Floor price with domain: ₹99.</p>
+<h3>Sensitivities</h3>
+<table><tr><th>Scenario</th><th>Result</th></tr>
+<tr><td>USD +10% (₹99 → ₹99 constant), 10k sites</td><td class="n">GM 71.6% → 69.1% (<span class="t C">C</span>, all AWS cost USD)</td></tr>
+<tr><td>CDN price −30% (Savings Bundle)</td><td class="n">Starter blended GM 74% → 80%</td></tr>
+<tr><td>One class-E viral site at 1,000 sites, uncapped</td><td class="r">₹24.8k = 25% of monthly revenue (₹99k)</td></tr>
+<tr><td>Same site with cap + ₹15/GB overage + ceiling 3×</td><td class="n">Max CDN cost ₹155 (15 GB); overage billed ₹150</td></tr>
+<tr><td>Domain adoption 100% instead of 50% (10k sites)</td><td class="n">+₹45k tenant fees → GM 67.1%</td></tr></table>
+
+<h2>8. Pricing recommendation</h2>
+<table><tr><th></th><th>Lite ₹49</th><th>Starter ₹99</th><th>Pro ₹199</th></tr>
+<tr><td>Sites</td><td>1</td><td>1</td><td>3</td></tr>
+<tr><td>Custom domain</td><td>No (subdomain)</td><td>1</td><td>2 (extra ₹20/domain)</td></tr>
+<tr><td>Transfer included</td><td>2 GB</td><td>5 GB</td><td>12 GB</td></tr>
+<tr><td>Storage</td><td>100 MB</td><td>500 MB</td><td>2 GB</td></tr>
+<tr><td>Requests</td><td>150k</td><td>500k</td><td>1.5M</td></tr>
+<tr><td>Releases kept</td><td>3</td><td>5</td><td>10</td></tr>
+<tr><td>Overage</td><td colspan="3">₹15/GB (cost ₹10.35 → 31% margin), ₹3/GB-mo storage, ₹30/M requests. Default spend ceiling 3× included; customer raises it explicitly.</td></tr>
+<tr><td>Billing</td><td>Annual prepay only</td><td>Monthly or annual (2 months free)</td><td>Monthly or annual</td></tr></table>
+<p><span class="t R">RECOMMENDATION</span>Launch with Starter + Pro, add Lite after 3 months of real usage data. Pricing is exclusive of 18% GST. Heavy features (AI, commerce, forms volume) are separate meters, never bundled into hosting.</p>
+
+<h2>9. AWS cost at 0 / 100 / 1k / 10k / 100k sites</h2>
+<p><span class="t C">CALCULATION</span>All sites on ₹99 Starter, 5 GB cap, class mix from §7, 50% with custom domain. Monthly, in ₹. Fixed-cost lines are <span class="t A">ASSUMPTIONS</span>.</p>
+<table><tr><th>Sites</th><th>CDN+requests</th><th>Platform variable</th><th>Domain tenants</th><th>Fixed platform</th><th>Payments</th><th>Total COGS</th><th>Revenue</th><th>COGS/site</th><th>GM</th></tr>
+<tr><td>0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">1,100</td><td class="n">0</td><td class="n">1,100</td><td class="n">0</td><td class="n">—</td><td class="n">—</td></tr>
+<tr><td>100</td><td class="n">1,710</td><td class="n">150</td><td class="n">1,800</td><td class="n">1,500</td><td class="n">248</td><td class="n">5,408</td><td class="n">9,900</td><td class="n">54</td><td class="n">45%</td></tr>
+<tr><td>1,000</td><td class="n">17,100</td><td class="n">1,500</td><td class="n">4,500</td><td class="n">12,000</td><td class="n">2,475</td><td class="n">37,575</td><td class="n">99,000</td><td class="n">38</td><td class="n">62%</td></tr>
+<tr><td>10,000</td><td class="n">171,000</td><td class="n">15,000</td><td class="n">45,000</td><td class="n">25,000</td><td class="n">24,750</td><td class="n">280,750</td><td class="n">990,000</td><td class="n">28</td><td class="n">72%</td></tr>
+<tr><td>100,000</td><td class="n">1,710,000</td><td class="n">150,000</td><td class="n">450,000</td><td class="n">90,000</td><td class="n">247,500</td><td class="n">2,647,500</td><td class="n">9,900,000</td><td class="n">26</td><td class="n">73%</td></tr></table>
+<p><b>Fixed platform detail</b> <span class="t A">A</span>: at 0 sites ≈ ₹1.1k = WAF (1 ACL + rules ≈ $8), Route 53 zones, KMS key, ~15 alarms, domains. 1k adds AWS Business Support (≈$100 minimum, ≈₹9k). 100k adds log pipeline, DDB, Savings Bundle overhead. Break-even: contribution ≈ ₹73/site → ≈ 25 sites cover ₹1.8k early fixed cost; ≈ 165 cover Business Support era.</p>
+<p><b>Pre-revenue dev cost</b> <span class="t R">REC</span>: ≈ ₹1.1k/month prod + near-zero staging (deploy on demand, destroy after tests, no WAF). New AWS accounts may receive promotional credits <span class="t A">A</span>. Verify.</p>
+
+<h2>10. Abuse and failure protections</h2>
+<table><tr><th>Scenario</th><th>Cheapest robust protection</th></tr>
+<tr><td>User uploads 50 GB</td><td>Quota checked at upload-URL issuance and at commit. Per-file 5 MB, per-plan total, reject on manifest over quota before any PUT.</td></tr>
+<tr><td>Movies / downloads</td><td>Extension + magic-byte allowlist (no video/audio/archives/executables). Egress cap makes remaining abuse unprofitable.</td></tr>
+<tr><td>Bot attacks free site</td><td>Free = preview only: unguessable URL, WAF rate rule, per-preview 300 MB cap, then cached 429 page.</td></tr>
+<tr><td>AI agent loops <code>write_files</code></td><td>Hash-diff makes identical writes a no-op (0 PUTs). Idempotency keys, 60 calls/min per token, 2,000 file writes/day, auto-pause token on 3× threshold and email.</td></tr>
+<tr><td>Millions of preview requests</td><td>WAF rate-based rule on preview distribution, 10k req cap, global ₹2k/day breaker.</td></tr>
+<tr><td>Abandoned projects</td><td>Draft 30+14 day expiry, preview 7 days, ARCHIVED state, blob refcount lifecycle.</td></tr>
+<tr><td>Malicious JS / crypto miners</td><td>Publish-time static scan: known miner signatures (coinhive-style domains, WebAssembly miners), obfuscation heuristics; user-content on a separate domain with strict <code>Content-Security-Policy: sandbox</code> where possible; report button. Detection is best-effort, so rely on takedown speed.</td></tr>
+<tr><td>Phishing</td><td>Publish-time heuristics (password fields + brand keywords + off-site form action), Google Safe Browsing lookup (free API) at publish and daily, payment required before public URL, abuse@ with 1-click suspend. Separate AWS account for customer content.</td></tr>
+<tr><td>Copyright</td><td>ToS, DMCA/IT Rules agent, takedown flow that swaps <code>live/</code> to notice page, repeat-infringer ban.</td></tr>
+<tr><td>Malware distribution</td><td>No executable/archive types, magic-byte check, Safe Browsing, no direct file downloads on preview.</td></tr>
+<tr><td>Account farming</td><td>Verified email, phone OTP at first publish, one preview per fresh account, IP/ASN limits, payment-method fingerprint dedupe, global breaker.</td></tr>
+<tr><td>Unexpected viral traffic</td><td>Overage + spend ceiling + hourly job + suspend page. Customer is emailed at 80% and 100%.</td></tr>
+<tr><td>Payment cancelled but site stays live</td><td>Razorpay webhook → entitlement state machine; daily reconciliation job comparing Razorpay subscription status to entitlements; <code>live/</code> swap on SUSPENDED.</td></tr>
+<tr><td>Webhook loss / duplicate</td><td>Signature verify, idempotent event IDs, daily reconcile.</td></tr>
+<tr><td>Leaked PAT token</td><td>Hash-only storage, scoped tokens (site-level), last-used display, revoke, prefix <code>sc_</code> for secret scanners.</td></tr></table>
+
+<h2>11. Developer and agent API</h2>
+<pre><code>sitecraft login            # device-code flow → PAT stored in OS keychain
+sitecraft init             # sitecraft.json + hash manifest
+sitecraft preview          # diff → upload missing blobs → preview URL (7 days)
+sitecraft deploy           # requires entitlement → publish → live URL</code></pre>
+<table><tr><th>Tool / endpoint</th><th>Notes</th></tr>
+<tr><td><code>create_site</code></td><td>slug, name → site_id</td></tr>
+<tr><td><code>list_files</code> / <code>read_file</code></td><td>Paginated; read returns text only ≤ 256 KB</td></tr>
+<tr><td><code>write_files</code></td><td>Batch ≤ 200 files. Step 1 send <code>{path, sha256, size}</code>, receive missing hashes + presigned PUTs. Step 2 commit manifest. Inline small files (&lt; 32 KB) to save a round trip.</td></tr>
+<tr><td><code>upload_assets</code></td><td>Same hash protocol for binary assets, presigned URLs</td></tr>
+<tr><td><code>validate</code></td><td>Broken links, clean-URL collisions, size, type, security scan, SEO basics. Returns structured errors with path/line.</td></tr>
+<tr><td><code>preview</code></td><td>Free, returns URL + expiry + remaining quota</td></tr>
+<tr><td><code>get_plan</code>, <code>get_usage</code></td><td>Plan, entitlement state, counters, caps</td></tr>
+<tr><td><code>create_checkout</code></td><td>Returns Razorpay link; <b>agent cannot complete payment</b></td></tr>
+<tr><td><code>publish</code>, <code>rollback</code></td><td>Entitlement-gated; rollback = pointer + copy, no upload</td></tr>
+<tr><td><code>connect_domain</code></td><td>Returns DNS records, polls status. Paid plans only.</td></tr></table>
+<p><span class="t R">RECOMMENDATION</span>Single surface: REST <code>/v1</code> described by OpenAPI; CLI and MCP server are thin clients of it (the MCP can be a Node/Go stdio binary; it never needs AWS credentials). Pipeline for every call: <b>authN → authZ (token scope + tenant) → quota → validate → audit → execute</b>, implemented once in the Lambda middleware. Responses include <code>usage_remaining</code> so agents self-throttle. Errors are machine-readable (<code>code, path, fix</code>) to save agent retries and tokens.</p>
+
+<h2>12. C++ and Vue technology choices</h2>
+<table><tr><th>Concern</th><th>Choice</th><th>Reason</th></tr>
+<tr><td>Lambda runtime</td><td><code>aws-lambda-cpp</code> on <code>provided.al2023</code></td><td><span class="t F">F</span>Official custom runtime, small cold start. <span class="t R">R</span></td></tr>
+<tr><td>AWS access</td><td>AWS SDK C++ built with only <code>dynamodb;s3;ssm</code> (static, vcpkg)</td><td>Avoids hand-rolled SigV4. Minimise build time/size. Fallback: libcurl + own SigV4 for just 3 calls.</td></tr>
+<tr><td>JSON</td><td><code>nlohmann/json</code></td><td>Header-only, ergonomic. Switch to simdjson only if profiling demands.</td></tr>
+<tr><td>HTTP/API abstraction</td><td>None inbound (API GW event → internal router, ~200 lines). Outbound Razorpay: libcurl.</td><td>No web framework needed in Lambda.</td></tr>
+<tr><td>Crypto</td><td>OpenSSL (HMAC webhooks, SHA-256, token hashing)</td><td>Already a dependency of the SDK.</td></tr>
+<tr><td>Build</td><td>CMake + vcpkg manifest, Docker multi-stage on Amazon Linux 2023, x86_64</td><td>arm64 is ~20% cheaper but compute is ≈₹0.01/site; avoid QEMU cross-build pain. Revisit with native arm runners.</td></tr>
+<tr><td>Tests</td><td>doctest/Catch2 unit tests; integration against DynamoDB Local + MinIO in Docker; contract tests from OpenAPI</td><td>Fast, no AWS cost.</td></tr>
+<tr><td>Lambda sizing</td><td>256 MB, 10 s timeout, reserved concurrency cap (e.g. 50)</td><td>Concurrency cap = cost ceiling on abuse.</td></tr>
+<tr><td>Frontend</td><td>Vue 3 + Vite + TypeScript + Pinia + Vue Router. Hand-written CSS or minimal utility CSS; no UI kit initially. Vitest + Playwright for 3 smoke flows.</td><td>Small bundle, stable.</td></tr>
+<tr><td>API client</td><td>Generated from OpenAPI (<code>openapi-typescript</code>)</td><td>One source of truth for Vue, CLI, MCP.</td></tr>
+<tr><td>CLI / MCP</td><td>Single static binary in Go or Node (<span class="t R">R</span>Go for the CLI, since it is a download-and-run binary)</td><td>Keep the C++ surface limited to the backend.</td></tr></table>
+<div class="box bad"><b>Honest challenge.</b> C++ in Lambda is a velocity tax for CRUD plus webhooks. It works and is cheap to run, but if the team is small, the same design in Go (also a custom <code>provided.al2023</code> runtime) would cut build/SDK pain. Decide in §15; the architecture does not depend on the language.</div>
+
+<h2>13. AWS IaC deployment plan</h2>
+<p><span class="t R">RECOMMENDATION</span><b>AWS CDK (TypeScript).</b> Reasons: CloudFormation underneath means no state backend to run, same-day resource coverage via L1 constructs (new CloudFront SaaS Manager resources first appear there), rollback built in, and the Vue/TS team already writes TypeScript. Terraform adds state, locking and lagging provider support; raw CloudFormation costs too many lines.</p>
+<table><tr><th>Environment</th><th>Decision</th></tr>
+<tr><td>DEV</td><td>Local only: DynamoDB Local + MinIO + <code>sam local</code>/Docker Lambda emulation. Cost ₹0.</td></tr>
+<tr><td>STAGING</td><td>Separate <b>nonprod account</b>, same CDK app with <code>-c stage=staging</code>, deployed on demand, <code>cdk destroy</code> after release testing; no WAF, no PITR, 1-day log retention. Idle ≈ ₹0.</td></tr>
+<tr><td>PRODUCTION</td><td>Separate prod account(s): <b>control-plane</b> and <b>customer-content</b> (blobs/live/preview/CloudFront). Consolidated billing through AWS Organizations (free).</td></tr></table>
+<p>Three always-on environments are not needed: use two accounts plus a staging stack that is deployed on demand.</p>
+<table><tr><th>Stack</th><th>Contents</th></tr>
+<tr><td><code>Foundation</code></td><td>Org/accounts, IAM roles (least privilege per Lambda; separate deploy role), GitHub OIDC role for CI, KMS key, Budgets ($20/$50/$100 + 80% forecast), Cost Anomaly Detection, SNS email, budget action → deny-policy on deploy role</td></tr>
+<tr><td><code>Data</code></td><td>DynamoDB (on-demand, PITR, TTL), S3 buckets (block public access, SSE-S3, OAC-only access), lifecycle rules (§6)</td></tr>
+<tr><td><code>Api</code></td><td>Lambda (ECR-free zip from Docker build), HTTP API, WAF, Cognito, SSM parameters, EventBridge Scheduler, log groups with retention</td></tr>
+<tr><td><code>Edge</code></td><td>CloudFront distributions (dashboard, wildcard, preview, multi-tenant), ACM certs (us-east-1), Route 53 zones, CF Functions, response-header policy (noindex on preview, security headers)</td></tr>
+<tr><td><code>Alarms</code></td><td>5xx rate, Lambda throttles, DDB throttles, daily estimated charges, preview spend breaker, webhook failures</td></tr></table>
+<p><b>Secrets:</b> SSM Parameter Store SecureString (free, standard tier) instead of Secrets Manager ($0.40/secret). No credentials in the repo; local use through AWS SSO/profile, CI through OIDC. Add secret scanning (gitleaks) pre-commit.</p>
+<pre><code>npm i -g aws-cdk &amp;&amp; cd infra
+cdk bootstrap aws://&lt;ACCOUNT&gt;/ap-south-1 aws://&lt;ACCOUNT&gt;/us-east-1   # one-time
+cdk deploy Foundation Data Api Edge -c stage=staging
+cdk destroy --all -c stage=staging                                   # after tests</code></pre>
+<p>Deploy to production only with your explicit approval, and review the first production deploy with <code>cdk diff</code>.</p>
+
+<h2>14. Future architecture boundaries</h2>
+<table><tr><th>Boundary</th><th>Rule</th></tr>
+<tr><td>Core owns</td><td>Tenant, user, site, release, domain, entitlement, usage ledger, audit log</td></tr>
+<tr><td>Modules (Commerce, Subscriptions, Appointments, AI, Plugins)</td><td>Own their tables (<code>PK</code> prefix per module), talk to Core only via the public <code>/v1</code> API and events. Never read Core tables directly.</td></tr>
+<tr><td>Events</td><td>Versioned envelope <code>{id, type, version, tenant_id, ts, data}</code> on EventBridge: <code>site.created</code>, <code>release.published</code>, <code>entitlement.changed</code>, <code>usage.threshold</code>, <code>domain.connected</code>, <code>abuse.suspended</code></td></tr>
+<tr><td>Entitlements</td><td>Feature flags/limits per plan in one <code>entitlements</code> record. Modules ask <code>can(tenant, feature)</code>, never check plan names.</td></tr>
+<tr><td>Metering</td><td>One generic usage ledger (<code>tenant, meter, qty, idem_key</code>) used by hosting, AI and commerce</td></tr>
+<tr><td>Dynamic routes</td><td>Future dynamic features run on a separate origin/route prefix (e.g. <code>/_sc/*</code> → API), never inside the static <code>live/</code> path</td></tr></table>
+<h3>Must be right now (expensive to change later)</h3>
+<ul><li><b>tenant_id on every record, S3 key and meter</b>: never retrofit.</li>
+<li><b>Separate user-content domain and AWS account</b>: cannot be migrated cheaply once customers have custom DNS pointing at you.</li>
+<li><b>Content-addressed blobs + immutable releases + manifest</b>.</li>
+<li><b>Entitlement model and usage ledger</b> (idempotent events).</li>
+<li><b>Public OpenAPI <code>/v1</code> with versioning and error codes</b> (CLI/MCP depend on it).</li>
+<li><b>Custom-domain CNAME target</b>: use a SiteCraft-owned name (<code>cname.sitecraft.site</code>) so the CDN vendor can be swapped without asking customers to change DNS.</li>
+<li><b>Money in integer paise + currency</b>, GST fields in invoice model.</li></ul>
+
+<h2>15. Decisions required before coding</h2>
+<table><tr><th>#</th><th>Decision</th><th>My default</th></tr>
+<tr><td>1</td><td>Final domains: app domain and a separate user-content domain</td><td>Register both</td></tr>
+<tr><td>2</td><td>Backend language: C++ vs Go (§12)</td><td>C++ if the team already writes it, otherwise Go</td></tr>
+<tr><td>3</td><td>Launch plans and caps (§8) incl. whether ₹49 exists at launch</td><td>Starter + Pro only</td></tr>
+<tr><td>4</td><td>India-only (Razorpay, INR) or global (USD, Stripe) at launch</td><td>India-only</td></tr>
+<tr><td>5</td><td>Cloudflare as alternative CDN (zero-egress economics) if AWS egress margin is unacceptable</td><td>Stay on AWS V1; keep CNAME indirection so a swap is possible</td></tr>
+<tr><td>6</td><td>Home region and audience</td><td>ap-south-1 for data; CF global</td></tr>
+<tr><td>7</td><td>Preview daily ₹ breaker value</td><td>₹2,000/day</td></tr>
+<tr><td>8</td><td>Legal: ToS, AUP, DPDP/IT Rules process, takedown SLA, GST registration</td><td>Required before first paid user</td></tr>
+<tr><td>9</td><td>Verify unit prices in the AWS Pricing Calculator and tenant pricing on the official page</td><td>Before publishing prices</td></tr>
+<tr><td>10</td><td>Support model and who watches abuse@</td><td>Founder email-only</td></tr></table>
+
+<h2>16. Exact V1 implementation sequence</h2>
+<table><tr><th>Step</th><th>Deliverable</th><th>Exit test (to run, not assumed)</th></tr>
+<tr><td>1</td><td>AWS Organization, nonprod + prod accounts, budgets, anomaly detection, CDK Foundation</td><td><code>cdk deploy Foundation</code>; test budget email fires</td></tr>
+<tr><td>2</td><td>OpenAPI spec (<code>/v1</code>) + DynamoDB single-table design + entitlement/usage schemas</td><td>Spec lints; schema review</td></tr>
+<tr><td>3</td><td>C++ Lambda skeleton: router, middleware pipeline, auth (PAT), audit, local Docker tests</td><td>Unit + DynamoDB Local integration pass</td></tr>
+<tr><td>4</td><td><code>write_files</code>/<code>upload_assets</code> with hash protocol, quotas, allowlist, <code>validate</code></td><td>Reupload of unchanged site = 0 PUTs; over-quota rejected</td></tr>
+<tr><td>5</td><td>Preview: preview bucket + distribution, expiry lifecycle, WAF rate rule, breaker</td><td>Preview URL works, noindex header, expires, 429 at cap</td></tr>
+<tr><td>6</td><td>Publish/rollback: materialise <code>live/</code>, wildcard distribution + CF Function, clean URLs</td><td>Publish live ≤ 60 s; rollback no upload</td></tr>
+<tr><td>7</td><td>CLI (<code>login/init/preview/deploy</code>) + MCP wrapper</td><td>End-to-end from an AI agent without AWS credentials</td></tr>
+<tr><td>8</td><td>Razorpay checkout, webhooks, entitlement state machine, reconciliation job</td><td>Test-mode: pay → live, cancel → suspended after grace</td></tr>
+<tr><td>9</td><td>Metering: CF logs → aggregator → counters → enforcement (warn/cap/suspend)</td><td>Synthetic traffic crosses cap and suspends within 2 h</td></tr>
+<tr><td>10</td><td>Vue dashboard: sites, files, preview, usage, billing, domains</td><td>Playwright smoke flows</td></tr>
+<tr><td>11</td><td>Custom domains via SaaS Manager + DNS checker</td><td>Real domain connected, cert issued</td></tr>
+<tr><td>12</td><td>Abuse: scan, Safe Browsing, takedown, abuse inbox, legal pages</td><td>Test phishing sample is blocked/suspended</td></tr>
+<tr><td>13</td><td>Load + cost test in staging; compare actual to §9 model; closed beta 20–50 sites</td><td>Replace class assumptions with measured data</td></tr></table>
+
+<h2>17. DO NOW / LATER / NEVER</h2>
+<div class="cols">
+<div><h3 class="g">DO NOW</h3><ul>
+<li>Preview-only free tier</li><li>Hash-based uploads, batch API</li><li>Bandwidth caps + overage + suspend page</li><li>Separate user-content domain and AWS account</li><li>tenant_id everywhere; usage ledger</li><li>Content-addressed blobs, immutable releases</li><li>Budgets, anomaly detection, alarms</li><li>CDK, two accounts, on-demand staging</li><li>Abuse intake + takedown</li><li>Entitlement state machine + reconciliation</li></ul></div>
+<div><h3 class="y">LATER</h3><ul>
+<li>₹49 Lite plan</li><li>Free published plan with badge</li><li>Server-side builds</li><li>Forms/CMS, stores, appointments, AI, plugins</li><li>Domain resale</li><li>Multi-region data / DR beyond PITR</li><li>CloudFront Savings Bundle</li><li>arm64 Lambda</li><li>Stripe / USD pricing</li><li>Cloudflare or second CDN</li></ul></div>
+<div><h3 class="r">NEVER</h3><ul>
+<li>Unlimited bandwidth/storage on any plan</li><li>Customer sites on the app's domain</li><li>AWS credentials to agents/CLI</li><li>EC2, Kubernetes, NAT Gateway, Redis, always-on RDS (not justified by math above)</li><li>Per-customer infrastructure</li><li>Video/audio/file-download hosting</li><li>Per-path CloudFront invalidations as the publish mechanism</li><li>Claiming gross margin without support/CAC caveat</li></ul></div></div>
+
+<h2>18. v1.1 changes: avoiding CloudFront costs</h2>
+<div class="box ok"><b>Answer.</b> You cannot reach ₹0 CDN cost, but you can remove the part that hurts: egress. <span class="t R">RECOMMENDATION</span>Move the <b>edge + file storage</b> to Cloudflare (R2 + Workers + Cloudflare for SaaS). Keep AWS for the <b>control plane</b> (API, Lambda, DynamoDB, billing, IaC). This supersedes the CloudFront/S3 delivery in §3–§9; those sections stay valid as the fallback design.</div>
+<p><span class="t F">FACT</span>(third-party summaries of Cloudflare pricing; confirm on Cloudflare's own pages): R2 egress is free, storage $0.015/GB-mo, Class A $4.50/M, Class B $0.36/M. Workers Paid $5/mo includes 10M requests, then $0.30/M. Custom hostnames: 100 free, then $0.10 each; self-serve plans cap at 50,000, above that is Enterprise pricing.</p>
+<h3>Per-site monthly cost, same traffic classes as §7 (₹, FX 90)</h3>
+<p><span class="t C">CALCULATION</span>Request cost = Worker ₹27/M + 20% cache-miss × R2 read ₹32.4/M = <b>₹33.5/M requests</b>. Egress = ₹0. Storage ₹1.35/GB-mo. The 20% miss rate is an <span class="t A">ASSUMPTION</span>.</p>
+<table><tr><th>Class</th><th>Requests</th><th>GB served</th><th>CloudFront + S3 (₹)</th><th>Cloudflare R2 + Workers (₹)</th><th>Saving</th></tr>
+<tr><td>A almost-zero</td><td class="n">1.2k</td><td class="n">0.08</td><td class="n">0.9</td><td class="n">0.07</td><td class="n">92%</td></tr>
+<tr><td>B normal</td><td class="n">24k</td><td class="n">1.6</td><td class="n">16.7</td><td class="n">0.87</td><td class="n">95%</td></tr>
+<tr><td>C medium</td><td class="n">360k</td><td class="n">24</td><td class="n">249</td><td class="n">12.3</td><td class="n">95%</td></tr>
+<tr><td>D high</td><td class="n">3.6M</td><td class="n">240</td><td class="n">2,485</td><td class="n">121</td><td class="n">95%</td></tr>
+<tr><td>E viral</td><td class="n">36M</td><td class="n">2,400</td><td class="n">24,841</td><td class="n">1,207</td><td class="n">95%</td></tr>
+<tr><td><b>Blended, uncapped</b></td><td></td><td></td><td class="r n">≈ 180</td><td class="g n">≈ 8.9</td><td class="n">95%</td></tr></table>
+<p>The cost driver changes from <b>GB</b> to <b>requests</b>. Customers can now be sold 80k+ page views instead of ~6k at the same price.</p>
+<h3>Revised plans (request-based caps)</h3>
+<table><tr><th>Plan (ex-GST)</th><th>Included</th><th>Worst-case COGS at cap</th><th>GM at cap</th><th>GM blended</th></tr>
+<tr><td>Free</td><td>subdomain, 50 MB, 100k req, badge</td><td class="n">₹3.7</td><td>n/a</td><td class="n">expected ≈ ₹0.4</td></tr>
+<tr><td>Starter ₹99</td><td>1 domain, 500 MB, 1M req (~80k views)</td><td class="n">₹47</td><td class="n">52%</td><td class="n">88%</td></tr>
+<tr><td>Pro ₹199</td><td>2 domains, 2 GB, 3M req (~250k views)</td><td class="n">₹127</td><td class="n">36%</td><td class="n">89%</td></tr></table>
+<p>Overage ₹60/M requests (cost ₹33.5, 44% margin). Fair-use clause: 100 GB/month and no video/large downloads on hosting plans. Blended = class mix from §7 with D/E capped at plan limit, platform ₹1.5–2, payment 2.5%, 50% domain adoption. At 100k paid Starter sites, GM ≈ 87% (was 73%).</p>
+<h3>New edge design</h3>
+<table><tr><th>Piece</th><th>Design</th></tr>
+<tr><td>Storage</td><td>R2 buckets: <code>blobs</code>, <code>live</code>, <code>preview</code>, <code>manifests</code>. Lambda issues S3-compatible presigned URLs; clients upload straight to R2 (no AWS↔Cloudflare transfer cost). Publish = R2 <code>CopyObject</code> of <b>changed files only</b> (diff vs previous release).</td></tr>
+<tr><td>Routing</td><td>One Worker: host → KV <code>{tenant, site, state, ver}</code> (cached 60 s in isolate) → R2 <code>live/{tenant}/{path}</code>. Clean URLs and 404 handling in the Worker. KV has no 5 MB limit, so the earlier KeyValueStore problem disappears.</td></tr>
+<tr><td>Custom domains</td><td>Cloudflare for SaaS custom hostnames; <code>cname.sitecraft.site</code> fallback origin. Paid plans only (₹9 each past 100).</td></tr>
+<tr><td>Real-time kill switch</td><td>Control plane writes <code>state=suspended</code> to KV; Worker serves the notice page within ~60 s. This fixes the 2-hour enforcement lag from §2 item 4 for known-bad sites.</td></tr>
+<tr><td>Metering</td><td>Adaptive polling of Cloudflare GraphQL analytics per hostname: &lt;20% of quota daily, 20–80% every 6 h, &gt;80% hourly. At very large scale move to Logpush to R2 (<span class="t A">ASSUMPTION</span>Enterprise feature).</td></tr>
+<tr><td>Fallback</td><td>R2 is S3-compatible; paid-site blobs replicated weekly to S3 Infrequent Access; the CNAME indirection lets you re-point to CloudFront. Test the failover quarterly.</td></tr></table>
+<div class="box bad"><b>New risks from Cloudflare.</b> (1) Vendor dependence and outage blast radius. (2) Self-serve cap of 50k hostnames, then a negotiated Enterprise contract. (3) Check Cloudflare's terms on serving user content before launch. (4) Prices above are from third-party summaries. Mitigation: use a separate Cloudflare account for customer content, keep the fallback, get an Enterprise quote before 25k custom domains.</div>
+<p><b>Auth correction.</b> Cognito costs scale with monthly users and break at millions. <span class="t R">RECOMMENDATION</span>Replace it in §3 with own minimal auth: Google OIDC + email OTP (SES ≈ $0.10/1k emails), sessions and PATs in DynamoDB. Phone OTP only at first publish (≈ ₹0.2–0.5 each).</p>
+
+<h2>19. How each risk gets solved</h2>
+<table><tr><th>Risk (§2 #)</th><th>Control</th><th>Build step (§16)</th><th>Proof to run</th></tr>
+<tr><td>Egress bill (1,2)</td><td>Cloudflare edge, request caps, overage ceiling</td><td>6, 9</td><td>Synthetic 2M requests crosses cap and suspends</td></tr>
+<tr><td>Domain fee (3)</td><td>Paid-only domains, per-plan limits, remove on ARCHIVED</td><td>11</td><td>Hostname count reconciles with billing weekly</td></tr>
+<tr><td>Metering lag (4)</td><td>KV kill switch + adaptive polling + WAF rate rule</td><td>9</td><td>Flip flag, site stops within 60 s</td></tr>
+<tr><td>Routing scale (5)</td><td>KV routing</td><td>6</td><td>Load 1M host keys in staging</td></tr>
+<tr><td>XSS / reputation (6)</td><td>Separate user-content domain, PSL submission</td><td>1, 6</td><td>Cookie from app domain not readable on a site</td></tr>
+<tr><td>Account suspension (7)</td><td>Separate AWS and Cloudflare accounts for content vs control</td><td>1</td><td>Document and rehearse restore</td></tr>
+<tr><td>C++ velocity (8)</td><td>Thin router, Docker build, language decision in §15</td><td>3</td><td>CI build &lt; 15 min, cold start measured</td></tr>
+<tr><td>Payments (9)</td><td>State machine + daily reconciliation</td><td>8</td><td>Replay duplicate and lost webhooks</td></tr>
+<tr><td>DNS support load (10)</td><td>DNS checker and exact record instructions</td><td>11</td><td>Test apex, www, wrong record, propagation</td></tr>
+<tr><td>Agent loops (13)</td><td>Hash-diff no-op, idempotency, token limits</td><td>4</td><td>1,000 identical writes → 0 PUTs</td></tr>
+<tr><td>Cost runaway (14)</td><td>Budgets, anomaly detection, Cloudflare usage alerts, concurrency caps</td><td>1</td><td>Trigger test alert</td></tr></table>
+<p><span class="t R">RECOMMENDATION</span>A risk is "solved" only when its proof row has been executed and logged. Add a <code>RISKS.md</code> checklist and tick items in CI release notes.</p>
+
+<h2>20. Worst-case scenarios</h2>
+<table><tr><th>Scenario</th><th>Automatic response</th><th>Manual runbook</th><th>Residual</th></tr>
+<tr><td>Cloudflare outage or account suspended</td><td>Status page, alert</td><td>Re-point <code>cname.sitecraft.site</code> to CloudFront + S3 replica (paid sites)</td><td class="r">Hours of downtime; custom-domain certs need re-validation</td></tr>
+<tr><td>AWS account suspended (phishing)</td><td>None possible</td><td>Content lives in a different account/domain, so control plane survives</td><td class="y">Contained</td></tr>
+<tr><td>Bad release breaks all sites</td><td>Staged rollout: 1% flag in KV → watch 5xx → 100%</td><td>Worker version rollback (instant)</td><td class="g">Minutes</td></tr>
+<tr><td>L7 attack on one site</td><td>WAF rate rule, then site suspend if request cap hit</td><td>"Under attack" mode</td><td>1B requests ≈ ₹27k</td></tr>
+<tr><td>Viral traffic</td><td>80% email, overage to 3× cap, suspend page</td><td>Customer raises spend limit</td><td>Bounded by ceiling</td></tr>
+<tr><td>Phishing wave from free signups</td><td>New-account publish hold (phone OTP, scan, 24 h review if suspicious), per-ASN limits, Safe Browsing</td><td>Bulk suspend by account cluster</td><td class="y">Some live minutes</td></tr>
+<tr><td>Legal takedown / court order</td><td>One-click takedown, geo-block capability, audit trail</td><td>Legal counsel on call</td><td class="y">Process cost</td></tr>
+<tr><td>DynamoDB corruption / deletion</td><td>Deletion protection, PITR, daily export to R2</td><td>Restore to new table, flip env var</td><td class="g">&lt; 1 h data loss</td></tr>
+<tr><td>Payment gateway outage</td><td>Entitlements frozen, grace extended, webhooks queued</td><td>Replay after recovery</td><td class="g">None for customers</td></tr>
+<tr><td>Credential leak</td><td>Hashed PATs, scoped tokens, secret-scanner prefix</td><td>Revoke all, rotate SSM secrets</td><td class="y">Tenant data exposure window</td></tr>
+<tr><td>Cost bug (publish loop, retry storm)</td><td>Lambda reserved concurrency, per-tenant limits, R2 Class A alarm, Budget deny-policy</td><td>Disable token, rollback</td><td class="g">Capped by alarms</td></tr>
+<tr><td>Cloudflare price or term change</td><td>None</td><td>Execute fallback plan, renegotiate</td><td class="y">Margin hit, not shutdown</td></tr>
+<tr><td>10M mostly-abandoned sites</td><td>90-day zero-traffic archive; storage ₹0.07/site/mo</td><td>Quarterly purge</td><td class="g">Bounded</td></tr></table>
+
+<h2>21. Business model and how it makes profit</h2>
+<table><tr><th>Revenue stream</th><th>Price</th><th>COGS</th><th>Margin</th><th>Phase</th></tr>
+<tr><td>Hosting subscriptions</td><td>₹99 / ₹199</td><td>≈ ₹11–21 blended</td><td class="n">≈ 88%</td><td>V1</td></tr>
+<tr><td>Overage (requests, storage)</td><td>₹60/M req</td><td>₹33.5/M</td><td class="n">44%</td><td>V1</td></tr>
+<tr><td>Custom domains (own domain)</td><td>included 1–2, extra ₹20/mo</td><td>₹9</td><td class="n">55%</td><td>V1</td></tr>
+<tr><td>Domain registration (resale)</td><td>cost + ₹100</td><td>registrar cost</td><td class="n">low, but drives retention</td><td>Later</td></tr>
+<tr><td>Commerce plan</td><td>₹499/mo (≤ 500 orders) + ₹1 per extra order</td><td>≈ ₹15 + ₹0.05/order <span class="t A">A</span></td><td class="n">≈ 95%</td><td>V2</td></tr>
+<tr><td>AI credits (prepaid packs)</td><td>cost × 1.4</td><td>model tokens</td><td class="n">≈ 29%</td><td>V2</td></tr>
+<tr><td>Plugins / templates marketplace</td><td>20% revenue share</td><td>~0</td><td class="n">≈ 100%</td><td>V3</td></tr>
+<tr><td>Agency / white-label</td><td>₹2,999/mo for 20 sites</td><td>≈ ₹250</td><td class="n">≈ 92%</td><td>V2</td></tr></table>
+<p><span class="t C">CALCULATION</span>Profit loop: each paid site contributes ≈ ₹100/mo. A free site costs ≈ ₹0.4 expected. <b>Break-even paid conversion on the free tier = 0.4 ÷ (100 + 0.4) ≈ 0.4%</b> (infrastructure only). People cost (support, trust &amp; safety) is the real constraint, not AWS/Cloudflare.</p>
+
+<h2>22. Business architecture and go-to-market</h2>
+<h3>Positioning (honest)</h3>
+<p>"Take over the competition" cannot be promised. Static hosting is commoditised (Cloudflare Pages, Netlify, Vercel and GitHub Pages have free tiers). You do not win on price per GB. <span class="t R">RECOMMENDATION</span>Win on: (1) <b>agent-native publishing</b> (MCP + one command, preview-then-pay), (2) <b>India-first billing</b> (UPI, GST invoices, INR, Hindi/regional UI), (3) <b>10× more traffic per rupee</b> through the Cloudflare cost base, (4) a path from a free site to a store without migration.</p>
+<table><tr><th>Competitor</th><th>Their strength</th><th>Our angle</th></tr>
+<tr><td>Cloudflare Pages / GitHub Pages</td><td>Free, fast</td><td>No billing, domains or support for non-developers; no agent workflow</td></tr>
+<tr><td>Netlify / Vercel</td><td>Developer ecosystem</td><td>USD pricing, developer-centric; we target AI-built SMB sites</td></tr>
+<tr><td>Wix / Hostinger / GoDaddy</td><td>Brand, bundled domains</td><td>Their editors lock users in; we host anything an AI produced</td></tr>
+<tr><td>Shopify</td><td>Commerce depth</td><td>Cost and customisation for single-product and local stores in India</td></tr></table>
+<h3>Phases</h3>
+<table><tr><th>Phase</th><th>Target</th><th>Tactics</th><th>Gate to move on</th></tr>
+<tr><td>0 · Beta</td><td>50 sites</td><td>Hand-recruited AI-builders, agencies, creators. Collect real traffic classes.</td><td>Activation (first preview within 5 min) ≥ 60%</td></tr>
+<tr><td>1 · Wedge</td><td>10k sites</td><td>MCP/agent directory listings, "Publish with SiteCraft" prompt snippets, content (how to host a ChatGPT-built site in India), free badge as a referral loop</td><td>Preview→paid ≥ 3% <span class="t A">target</span></td></tr>
+<tr><td>2 · Scale</td><td>100k–1M</td><td>Agency/white-label, templates, college and bootcamp programmes, regional-language SEO, WhatsApp share links, domain bundle</td><td>Payback &lt; 3 months, churn &lt; 4%/mo</td></tr>
+<tr><td>3 · Platform</td><td>10M</td><td>Commerce, plugins marketplace, partnerships with AI tools, global expansion</td><td>See §23 economics</td></tr></table>
+<p><span class="t C">CALCULATION</span>10M sites in 4 years ≈ 6.8k new sites/day average. Expect a large share to be free, abandoned or spam. Plan for 10M <b>registered</b> sites, ~1–5% paid.</p>
+<h3>Operating model</h3>
+<table><tr><th>Function</th><th>Owns</th><th>Day-one tooling</th></tr>
+<tr><td>Product/Engineering</td><td>Core, CLI/MCP, dashboard</td><td>CDK, CI, runbooks</td></tr>
+<tr><td>Trust &amp; Safety</td><td>Scan, takedown, abuse inbox, repeat offenders</td><td>Admin console, Safe Browsing, case table</td></tr>
+<tr><td>Billing/Finance</td><td>Razorpay reconciliation, GST, refunds</td><td>Daily reconcile job, invoice export</td></tr>
+<tr><td>Growth</td><td>Funnel, SEO, partnerships</td><td>Event tracking, UTM on signup</td></tr>
+<tr><td>Support</td><td>Domains, billing issues</td><td>Docs, email-only, canned flows</td></tr></table>
+
+<h2>23. Economics at 10 million sites</h2>
+<p><span class="t A">ASSUMPTION</span>95% free, 4% Starter, 1% Pro (500k paid, avg price ₹119); 50% of paid use a domain; free expected cost ₹0.4; paid COGS ≈ ₹12.5 (CDN ₹3, platform ₹1.5, payments ₹3, domain ₹4.5 amortised); Enterprise contract and people costs guessed.</p>
+<table><tr><th>Line</th><th>₹ / month</th></tr>
+<tr><td>Revenue: 400k × ₹99 + 100k × ₹199</td><td class="n">59.5M (₹5.95 crore)</td></tr>
+<tr><td>Free tier: 9.5M × ₹0.4</td><td class="n">3.8M</td></tr>
+<tr><td>Paid COGS: 500k × ₹12.5</td><td class="n">6.3M</td></tr>
+<tr><td>Domain hostnames: 250k × ₹9</td><td class="n">2.3M</td></tr>
+<tr><td>Cloudflare Enterprise + AWS support (guess)</td><td class="n">1.4M</td></tr>
+<tr><td>Support + trust &amp; safety people (guess)</td><td class="n">6.0M</td></tr>
+<tr><td><b>Total</b></td><td class="n">19.8M</td></tr>
+<tr><td><b>Operating contribution</b></td><td class="g n">≈ 39.7M (67%)</td></tr></table>
+<table><tr><th>Paid conversion</th><th>Revenue</th><th>Cost</th><th>Result</th></tr>
+<tr><td>0.4%</td><td class="n">≈ 4.8M</td><td class="n">≈ 12M</td><td class="r n">loss (people-heavy)</td></tr>
+<tr><td>1%</td><td class="n">11.9M</td><td class="n">≈ 13.1M</td><td class="y n">≈ break-even</td></tr>
+<tr><td>2%</td><td class="n">23.8M</td><td class="n">≈ 14.7M</td><td class="g n">+ 9.1M</td></tr>
+<tr><td>5%</td><td class="n">59.5M</td><td class="n">19.8M</td><td class="g n">+ 39.7M</td></tr></table>
+<p><span class="t R">RECOMMENDATION</span>Keep people cost variable (automation first, outsourced tier-1 support). The model only works if conversion ≥ 1–2%. Measure it in Phase 0–1 before spending on the free tier at scale. Enable the free published tier only after the new-account abuse controls from §20 are live.</p>
+<h3>Hidden costs to watch</h3>
+<table><tr><th>Item</th><th>Why it grows</th><th>Control</th></tr>
+<tr><td>R2 Class A (writes/copies)</td><td>Many small files per publish ($4.50/M)</td><td>Copy changed files only; max 200 files/publish</td></tr>
+<tr><td>KV reads/writes</td><td>$0.50/M reads over 10M; writes cost more</td><td>60 s isolate cache; write only on state change</td></tr>
+<tr><td>DynamoDB writes</td><td>Per-site hourly counters × millions</td><td>Daily rollup for free sites, hourly only for paid/near-cap</td></tr>
+<tr><td>Phone/SMS OTP</td><td>10M signups × ₹0.2–0.5</td><td>OTP only at first publish, not signup</td></tr>
+<tr><td>Email (SES)</td><td>Notifications at scale</td><td>Digest, preference defaults</td></tr>
+<tr><td>Cloudflare hostnames</td><td>Billed until deleted, even pending</td><td>Auto-delete unvalidated after 7 days</td></tr>
+<tr><td>Logs and analytics</td><td>Volume with traffic</td><td>Retention 14–30 days, aggregate then archive</td></tr>
+<tr><td>Support and abuse</td><td>Scales with signups, not traffic</td><td>Self-serve, automation, metrics per 1k sites</td></tr></table>
+
+<h2>24. E-commerce and customised stores</h2>
+<p><span class="t R">RECOMMENDATION</span>Commerce is a separate module (§14): own tables, own API, same tenant and entitlement model. The storefront stays static; only cart, checkout and orders are dynamic.</p>
+<table><tr><th>Layer</th><th>Design</th></tr>
+<tr><td>Catalog</td><td>Products edited in dashboard or via API; published as static JSON into the release, so product reads cost the same as static files.</td></tr>
+<tr><td>Cart</td><td>Client-side (localStorage); the server holds no cart state until checkout.</td></tr>
+<tr><td>Checkout</td><td>Worker route <code>/_sc/commerce/*</code> → Commerce Lambda → creates a Razorpay order (hosted checkout/UPI). <b>SiteCraft never sees card data.</b></td></tr>
+<tr><td>Orders and inventory</td><td>DynamoDB <code>commerce</code> table. Stock decrement with conditional write (no oversell). Webhook-driven order state machine: created → paid → fulfilled → refunded.</td></tr>
+<tr><td>Digital goods</td><td>Private R2 objects with short-lived signed URLs (egress free).</td></tr>
+<tr><td>Single-product store</td><td>Template + one product, available on Starter. Fee 0 (gateway fee only).</td></tr>
+<tr><td>Full store</td><td>Commerce plan ₹499/mo: catalog, variants, coupons, GST invoice, order emails, WhatsApp notification hook.</td></tr>
+<tr><td>Custom store (developer or AI-built)</td><td>User/AI writes any HTML/JS and calls <code>sitecraft-commerce.js</code> (add_to_cart, checkout, orders). Storefront is fully custom; backend is ours. Exposed to agents as <code>commerce_*</code> tools.</td></tr>
+<tr><td>Shipping, inventory sync, marketplaces</td><td>Plugins later (event-driven via <code>order.paid</code> events).</td></tr></table>
+<div class="box bad"><b>Legal gate.</b> Holding or settling merchants' money can make you a payment aggregator under RBI rules. <span class="t R">RECOMMENDATION</span>Use merchant-owned gateway keys (or the gateway's marketplace/split product) so funds never touch SiteCraft accounts. Get legal advice before launch. Also required: GST invoices, refund policy templates, consumer-protection e-commerce disclosures.</div>
+<p><span class="t C">CALCULATION</span>Order cost ≈ Lambda + ~10 DDB writes + email ≈ ₹0.05 <span class="t A">A</span>; 500 orders ≈ ₹25 against ₹499 revenue.</p>
+
+<h2>25. Database design</h2>
+<p>DynamoDB on-demand, <b>core</b> table <code>sc_core</code>, separate <code>sc_commerce</code> later. Big or fast-changing objects stay out of DynamoDB: file manifests are gzip JSON in R2 (<code>manifests/{site}/{release}.json.gz</code>), one DDB item per release.</p>
+<table><tr><th>Entity</th><th>PK</th><th>SK</th><th>Key attributes</th><th>Notes</th></tr>
+<tr><td>User</td><td><code>U#{uid}</code></td><td><code>PROFILE</code></td><td>email_hash, name, locale, created</td><td>GSI1: email → user</td></tr>
+<tr><td>Tenant</td><td><code>T#{tid}</code></td><td><code>META</code></td><td>plan, entitlement_state, razorpay_sub, limits</td><td>One billing account per tenant</td></tr>
+<tr><td>Membership</td><td><code>T#{tid}</code></td><td><code>M#{uid}</code></td><td>role</td><td>GSI1: user → tenants</td></tr>
+<tr><td>Site</td><td><code>T#{tid}</code></td><td><code>S#{sid}</code></td><td>slug, state, current_release, bytes</td><td>GSI2: slug → site (unique)</td></tr>
+<tr><td>Release</td><td><code>S#{sid}</code></td><td><code>R#{ulid}</code></td><td>manifest_key, file_count, bytes, created_by</td><td>Keep last N, TTL older</td></tr>
+<tr><td>Domain</td><td><code>S#{sid}</code></td><td><code>D#{host}</code></td><td>cf_hostname_id, status, verified_at</td><td>GSI2: host → site</td></tr>
+<tr><td>Token (PAT)</td><td><code>T#{tid}</code></td><td><code>K#{hash}</code></td><td>scopes, site_ids, last_used, expires</td><td>GSI2: hash → token</td></tr>
+<tr><td>Usage</td><td><code>T#{tid}</code></td><td><code>U#{yyyymm}</code> and <code>U#{yyyymmdd}</code></td><td>requests, bytes, stored_bytes, writes, previews</td><td>Atomic ADD; daily rows TTL 90 d</td></tr>
+<tr><td>Preview</td><td><code>P#{id}</code></td><td><code>META</code></td><td>site, expires_at, bytes</td><td>TTL = expires_at</td></tr>
+<tr><td>Audit</td><td><code>T#{tid}</code></td><td><code>A#{ts}#{id}</code></td><td>actor, action, target, ip</td><td>TTL 90 d; archive to R2</td></tr>
+<tr><td>Abuse case</td><td><code>C#{id}</code></td><td><code>META</code></td><td>site, reason, status, decided_by</td><td>GSI3: status → queue</td></tr>
+<tr><td>Idempotency</td><td><code>I#{key}</code></td><td><code>META</code></td><td>response hash</td><td>TTL 24 h</td></tr>
+<tr><td>Event outbox</td><td><code>E#{tid}</code></td><td><code>{ts}#{id}</code></td><td>type, version, payload</td><td>Stream → EventBridge</td></tr>
+<tr><td>Commerce (separate table)</td><td><code>T#{tid}</code></td><td><code>PROD#…</code>, <code>ORD#…</code>, <code>STK#…</code></td><td>price (paise), stock, status</td><td>Module-owned</td></tr></table>
+<p><b>GSIs:</b> GSI1 (user ↔ tenant), GSI2 (lookup by slug / host / token hash), GSI3 (sparse: state + expiry for sweeps and abuse queue). <b>Edge copy:</b> Cloudflare KV <code>host → {tid, sid, state, ver}</code> written only on state change (source of truth stays DynamoDB). <b>Invariants:</b> every item has <code>tid</code>; all queries go through a tenant-scoped repository function; money in integer paise; no cross-module table reads.</p>
+
+<h2>26. System design: request paths and performance</h2>
+<pre><code>VISITOR   DNS → Cloudflare edge → Worker
+            ├─ KV(host) [isolate cache 60s] → state/ver
+            ├─ suspended? → notice page (static)
+            ├─ cache hit → response (no R2 read)
+            └─ miss → R2 live/{tid}/{path} → cache → response
+                      headers: HTML s-maxage=60, assets immutable 1y, Brotli, security headers
+
+PUBLISH   CLI/agent → API GW → Lambda: authN→authZ→quota→validate→audit
+            ├─ returns missing-hash list + presigned R2 PUTs
+            ├─ client uploads blobs directly to R2
+            └─ commit: write manifest (R2) + release item (DDB) → CopyObject changed files → KV ver++
+
+METER     Cloudflare analytics (adaptive poll) → Lambda aggregator → DDB usage → over cap? → KV state=suspended
+BILLING   Razorpay webhook → Lambda → entitlement state → KV state → site live/suspended</code></pre>
+<table><tr><th>Target</th><th>Value</th><th>Tag</th></tr>
+<tr><td>Cached TTFB (p50)</td><td>&lt; 50 ms in-region</td><td><span class="t A">target, unmeasured</span></td></tr>
+<tr><td>Publish to live</td><td>≤ 60 s</td><td><span class="t A">target</span></td></tr>
+<tr><td>API p95</td><td>&lt; 300 ms; Lambda cold start &lt; 100 ms (C++)</td><td><span class="t A">target</span></td></tr>
+<tr><td>Dashboard first load</td><td>&lt; 150 KB gzip JS, route-split</td><td><span class="t A">target</span></td></tr>
+<tr><td>Dependencies</td><td>Vue core libs, CDK, doctest, nlohmann/json, aws-lambda-cpp. No other runtime services.</td><td><span class="t R">REC</span></td></tr></table>
+<p>Lean rules: no queues in V1 beyond EventBridge schedules; no servers; one Lambda binary; one Worker; scale comes from DynamoDB on-demand and Cloudflare. Scale limits to revisit: DynamoDB hot keys (tenant-scoped keys avoid them), Lambda concurrency (raise account quota early), Cloudflare hostname cap (50k).</p>
+
+<h2>27. UI/UX plan</h2>
+<h3>Principles</h3>
+<ul><li>One job per screen; one primary action per state ("Preview", then "Publish ₹99/mo").</li>
+<li><b>Mobile-first</b> (many Indian users manage on a phone), WCAG AA, keyboard navigable, plain language, Hindi and regional languages later via i18n keys from day one.</li>
+<li>Zero-config: the user never sees S3, CDN or DNS terms. Show only "Preview", "Live", "Domain", "Usage".</li></ul>
+<h3>Information architecture</h3>
+<table><tr><th>Screen</th><th>Content</th></tr>
+<tr><td>Sites (home)</td><td>Cards: name, state chip (Draft / Preview / Live / Paused), last publish, usage bar. Button "New site".</td></tr>
+<tr><td>Connect (first-run wizard)</td><td>Tabs: ChatGPT · Claude · Cursor/VS Code · CLI · Upload ZIP. Copy-paste prompt + MCP URL + one-click token. Live status "Waiting for your first upload…" that flips to the preview card.</td></tr>
+<tr><td>Site → Overview</td><td>Preview link + expiry, Publish button, status checklist (preview ✓, plan ✓, domain —), usage meters.</td></tr>
+<tr><td>Site → Files</td><td>Read-only tree, change list (added/changed/removed), version history with Rollback.</td></tr>
+<tr><td>Site → Domain</td><td>Step-by-step DNS records with copy buttons, live checker.</td></tr>
+<tr><td>Site → Store (later)</td><td>Products, orders, payouts settings.</td></tr>
+<tr><td>Usage and Billing</td><td>Meters (80% amber, 100% red), plan, invoices (GST), spend limit.</td></tr></table>
+<pre><code>SITES                                   SITE OVERVIEW
+┌────────────────────────────────┐      ┌───────────────────────────────────┐
+│ + New site                     │      │ asha-bakery            [Preview]  │
+│ ┌────────────────────────────┐ │      │ preview.sitecraft.site/x7k2  ⧉    │
+│ │ asha-bakery        ● Live  │ │      │ Expires in 5 days                 │
+│ │ ▓▓▓▓░░░░ 38% of requests   │ │      │ ✓ Files validated   ✓ Plan  ○ Domain
+│ └────────────────────────────┘ │      │ [ Publish – ₹99/mo ]              │
+└────────────────────────────────┘      │ Requests ▓▓▓░░░ 31%  Storage ▓░░ 8% │
+                                        └───────────────────────────────────┘</code></pre>
+<h3>State copy and edge cases</h3>
+<table><tr><th>State</th><th>UI behaviour</th></tr>
+<tr><td>Empty</td><td>Only the Connect wizard and a sample prompt.</td></tr>
+<tr><td>Preview expiring</td><td>Banner at 2 days: "Publish to keep it".</td></tr>
+<tr><td>80% quota</td><td>Amber meter, upgrade link, no blocking.</td></tr>
+<tr><td>Grace (payment failed)</td><td>Site stays live; red banner with days left and Pay button.</td></tr>
+<tr><td>Suspended</td><td>Clear reason, one action (pay / raise limit / appeal).</td></tr>
+<tr><td>Offline / API error</td><td>Retry with request ID; never lose pasted tokens.</td></tr></table>
+<p><b>Metrics:</b> time to first preview (&lt; 3 min), preview→checkout, checkout→live, 30-day retention, support tickets per 1k sites. <b>Stack:</b> Vue 3 + Vite + TypeScript + Pinia, hand-written CSS with design tokens (IBM Plex Sans, sharp corners, compact, SVG icons per your DEIENAMI defaults; use client branding for white-label).</p>
+
+<h2>28. What we may still have missed</h2>
+<ul><li><b>Email deliverability</b> for OTP and invoices (SPF/DKIM/DMARC, SES out of sandbox).</li>
+<li><b>Contact/forms spam</b> once forms ship: need CAPTCHA/Turnstile and rate limits before enabling.</li>
+<li><b>Backups visible to customers</b> (export site as ZIP) for portability and trust.</li>
+<li><b>Data residency and DPDP</b> (consent, deletion on request, breach notification).</li>
+<li><b>Trademark/brand</b>: confirm the name SiteCraft is available before spending on the domain.</li>
+<li><b>Refunds and chargebacks</b> policy; GST on overage and domain resale.</li>
+<li><b>Customer SEO expectations</b>: sitemap.xml, robots.txt, canonical, redirects, 404 pages generated at publish.</li>
+<li><b>Accessibility of generated sites</b> (validate step warns on missing alt text).</li>
+<li><b>Staff access control</b>: admin console with audit and least privilege from day one.</li>
+<li><b>Testing at scale</b>: synthetic 1M-host KV and traffic test in staging before Phase 2.</li></ul>
+
+<h2>Architecture Decision Record (single page)</h2>
+<div class="box"><b>ADR-001 · SiteCraft V1 · Status: Proposed · Date 2026-11-14</b></div>
+<table>
+<tr><th>Context</th><td>Publish AI-built static sites for ₹99–₹199/mo with ≤ ₹25 COGS/site. CloudFront egress (≈₹10.35/GB all-in) is the only material variable cost. Uncapped blended cost ≈ ₹182/site.</td></tr>
+<tr><th>Decision</th><td>
+<ol style="margin:0;padding-left:18px">
+<li>States: LOCAL (₹0) → DRAFT (25 MB, 30+14 d) → PREVIEW (7 d, 25 MB ×2, 1 GB/mo, noindex) → PUBLISHED (entitlement required). No free published tier.</li>
+<li>AWS, single region ap-south-1 data, ≥ 2 accounts (control plane / customer content) + nonprod; user sites on a separate registrable domain.</li>
+<li>Stack: Vue 3 SPA (S3+CF); HTTP API + WAF → one routed Lambda (C++ <code>provided.al2023</code>, 256 MB, reserved concurrency 50) → DynamoDB on-demand single-table + PITR → S3.</li>
+<li>Storage: <code>blobs/{sha256}</code> immutable; <code>live/{tenant}/</code> and <code>preview/{id}/</code> materialised by <code>CopyObject</code>; manifest in DDB; keep 5 releases.</li>
+<li>Delivery: CF wildcard + preview + multi-tenant (custom domains, origin path per tenant). CF Function for host→prefix and clean URLs. HTML TTL 60 s, assets immutable. No invalidations, no KeyValueStore routing.</li>
+<li>Metering: DDB counters per tenant/month (<code>T#id / U#yyyymm</code>); CF logs → S3 → hourly aggregator; thresholds 80% warn, cap → overage (₹15/GB) up to 3× then suspend page.</li>
+<li>Plans (ex-GST): Starter ₹99 = 5 GB, 500 MB, 1 domain; Pro ₹199 = 12 GB, 2 GB, 2 domains; Lite ₹49 later (2 GB, subdomain, annual).</li>
+<li>Entitlements: ACTIVE → GRACE (7 d) → SUSPENDED (swap live page, 60 d) → ARCHIVED. Razorpay webhooks + daily reconciliation.</li>
+<li>API: REST <code>/v1</code> + OpenAPI; CLI and MCP are thin clients (PAT <code>sc_</code> hashed). Pipeline authN→authZ→quota→validate→audit→execute. Batch, hash-diff, idempotency keys.</li>
+<li>Safety: file-type allowlist, 5 MB/file, publish scan + Safe Browsing, abuse@ + takedown, WAF rate rules on preview/API, global preview breaker ₹2k/day.</li>
+<li>IaC: CDK (TypeScript), stacks Foundation/Data/Api/Edge/Alarms, SSM SecureString secrets, GitHub OIDC CI, Budgets + anomaly + deny-policy action. Staging on demand.</li>
+<li>Boundaries: tenant_id everywhere, versioned events, entitlement checks via <code>can()</code>, generic usage ledger, vendor-neutral CNAME target.</li></ol></td></tr>
+<tr><th>Consequences</th><td>Gross margin (₹99, blended) 45% @100, 62% @1k, 72% @10k, 73% @100k sites before support/CAC. Idle cost ≈ ₹1.1k/mo. Worst-case free-account cost ≈ ₹11/mo. Lag ≤ ~2 h on bandwidth enforcement. Custom domains cost ≈ ₹9 each, so they are paid-only.</td></tr>
+<tr><th>Risks / open</th><td>Unit prices unverified except tenant pricing; class mix assumed; C++ velocity; support cost unmodelled; viral spike overshoot; legal review pending.</td></tr>
+<tr><th>Revisit when</th><td>CDN spend &gt; ₹3L/mo (Savings Bundle or alternate CDN), measured class mix differs by &gt; 30%, USD/INR moves &gt; 10%, or abuse reports &gt; 1% of sites.</td></tr>
+</table>
+<div class="box"><b>ADR-002 · Edge on Cloudflare, control plane on AWS · Status: Proposed · supersedes ADR-001 items 4, 5 and the CDN parts of 3, 6, 11</b></div>
+<table>
+<tr><th>Context</th><td>CloudFront egress makes uncapped blended COGS ≈ ₹180/site and forces small plans. Cloudflare R2 has free egress; requests become the cost (₹33.5/M).</td></tr>
+<tr><th>Decision</th><td><ol style="margin:0;padding-left:18px">
+<li>R2 holds <code>blobs</code>, <code>live</code>, <code>preview</code>, <code>manifests</code>. Clients upload to R2 by presigned URL. Publish copies changed files only.</li>
+<li>One Worker routes host → KV → R2, applies state (suspended/preview/expired) and headers. KV is a cache of DynamoDB state.</li>
+<li>Custom domains through Cloudflare for SaaS; paid plans only; <code>cname.sitecraft.site</code> as vendor-neutral target; separate Cloudflare account for customer content.</li>
+<li>AWS stays: HTTP API, one Lambda, DynamoDB (<code>sc_core</code>, later <code>sc_commerce</code>), SES, SSM, Budgets, CDK. Own auth (Google + email OTP + PAT), no Cognito.</li>
+<li>Plans: Free (50 MB, 100k req, badge, subdomain, only after abuse controls), Starter ₹99 (1M req, 1 domain), Pro ₹199 (3M req, 2 domains), Commerce ₹499. Overage ₹60/M req with 3× ceiling.</li>
+<li>Metering by adaptive polling; kill switch via KV (≤ 60 s). Free sites daily, paid hourly.</li>
+<li>Commerce is a module on <code>/_sc/commerce/*</code>; merchant-owned gateway keys; no card data; no funds held.</li>
+<li>Fallback: weekly S3 replica of paid blobs + CloudFront/S3 stack kept deployable; failover drill quarterly.</li></ol></td></tr>
+<tr><th>Consequences</th><td>Blended CDN cost ≈ ₹8.9 vs ₹180. Starter blended GM ≈ 88%, 100k paid sites ≈ 87%. Free tier expected ≈ ₹0.4/site, worst ₹3.7. 10M-site model profitable at ≥ 1–2% paid conversion (people cost dominates). New dependency on Cloudflare (outage, terms, 50k hostname cap).</td></tr>
+<tr><th>Verify before build</th><td>Cloudflare prices and content-serving terms on official pages; Enterprise quote at 25k domains; legal advice on payments and takedowns; measured traffic classes from beta.</td></tr>
+</table>
+</main>
+<script>
+const $=s=>document.querySelector(s),side=$('#side'),toc=$('#toc'),hs=[...document.querySelectorAll('main h2')];
+hs.forEach((h,i)=>{h.id='s'+i;const a=document.createElement('a');a.href='#s'+i;a.textContent=h.textContent;side.append(a);toc.append(a.cloneNode(true))});
+$('#q').oninput=e=>{const v=e.target.value.toLowerCase();side.querySelectorAll('a').forEach(a=>a.style.display=a.textContent.toLowerCase().includes(v)?'':'none')};
+const links=[...side.querySelectorAll('a')];
+new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.hash==='#'+e.target.id))}),{rootMargin:'-70px 0px -75% 0px'}).observe&&hs.forEach(h=>new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.hash==='#'+e.target.id))}),{rootMargin:'-70px 0px -75% 0px'}).observe(h));
+$('#menu').onclick=()=>side.classList.toggle('open');side.onclick=e=>{if(e.target.tagName==='A')side.classList.remove('open')};
+try{const t=localStorage.getItem('th');if(t)document.documentElement.dataset.theme=t}catch(e){}
+$('#th').onclick=()=>{const d=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=d;try{localStorage.setItem('th',d)}catch(e){}};
+</script>
+</body>
+</html>
